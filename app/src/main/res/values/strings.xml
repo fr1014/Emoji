@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Emoji</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="et_folder_name">请输入文件夹名称</string>
+    <string name="confirm">创建</string>
+    <string name="update">更新</string>
+    <string name="edit">编辑</string>
+</resources>
