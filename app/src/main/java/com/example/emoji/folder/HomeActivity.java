@@ -57,12 +57,7 @@ public class HomeActivity extends BaseActivity<FolderViewModel> {
     public void initViewModel() {
         viewModel = new ViewModelProvider(this).get(FolderViewModel.class);
 
-        viewModel.getGetAllFoldersLive().observe(this, new Observer<List<FolderEntity>>() {
-            @Override
-            public void onChanged(List<FolderEntity> folderEntities) {
-                adapter.setData(folderEntities);
-            }
-        });
+        viewModel.getGetAllFoldersLive().observe(this, folderEntities -> adapter.setData(folderEntities));
     }
 
     public View getMotionView(){

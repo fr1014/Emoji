@@ -51,7 +51,6 @@ public class EmojiViewModel extends ViewModel {
                 .subscribe(new SimpleConsumer<EmojiEntity>() {
                     @Override
                     protected void accept(EmojiEntity emojiEntity) {
-                        FileUtils.deleteSingleFile(emojiEntity.getPath());   //删除单文件
                         emojiDao.delete(emojiEntity);
                     }
                 });

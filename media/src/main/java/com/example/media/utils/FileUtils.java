@@ -11,9 +11,12 @@ import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * 创建时间：2020/2/10
@@ -172,7 +175,7 @@ public class FileUtils {
      * @return 内部私有文件的路径
      */
     public static String copyFile2Private(Context context,String oldPath){
-        String newPath = context.getExternalCacheDir() + "/" + FileUtils.getFileName(oldPath);
+        String newPath = context.getExternalCacheDir() + "/" + FileUtils.getFileName(oldPath) +"."+ FileUtils.getExtensionName(oldPath);
         FileUtils.copyFile(oldPath,newPath);
         return newPath;
     }
@@ -189,5 +192,64 @@ public class FileUtils {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param path 图片路径
+     * @return 二进制
+     * @throws IOException
+     */
+    public static byte[] file2Byte(String path) throws IOException {
+        FileInputStream fis = new FileInputStream(path);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = fis.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        return out.toByteArray();
+    }
+
+    /**
+     * 二进制转文件
+     * @param buf 二进制
+     * @param filePath 文件路径
+     * @param fileName 文件名
+     *
+     * @return 文件路径
+     */
+    public static String byte2File(byte[] buf, String filePath, String fileName) {
+        BufferedOutputStream bos = null;
+        FileOutputStream fos = null;
+        String path = filePath + File.separator + fileName;
+        File file = null;
+        try {
+            File dir = new File(filePath);
+            if (!dir.exists() && dir.isDirectory()) {
+                dir.mkdirs();
+            }
+            file = new File(filePath + File.separator + fileName);
+            fos = new FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(buf);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return path;
     }
 }

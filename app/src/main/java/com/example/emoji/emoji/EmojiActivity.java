@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -17,7 +16,6 @@ import com.example.emoji.R;
 import com.example.emoji.base.BaseActivity;
 import com.example.emoji.data.room.entity.EmojiEntity;
 import com.example.emoji.data.room.entity.FolderEntity;
-import com.example.emoji.utils.ImageUtil;
 import com.example.emoji.utils.shareutils.NativeShareTool;
 import com.example.media.bean.Image;
 import com.example.media.imageselect.images.ImageSelectActivity;
@@ -28,7 +26,6 @@ import com.example.media.utils.ImageSelector;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -36,7 +33,7 @@ public class EmojiActivity extends BaseActivity<EmojiViewModel> {
 
     private String folderName;
     private int fid;    //文件夹在数据库中的id
-    private String fPath;//文件夹封面图片地址
+    private byte[] bytes;//文件夹封面图片
     private CircleImageView civ;
     private TextView tvFolder;
     private MotionEventImageView motionView;
@@ -72,11 +69,11 @@ public class EmojiActivity extends BaseActivity<EmojiViewModel> {
             if (entity != null) {
                 fid = entity.getId();
                 folderName = entity.getName();
-                fPath = entity.getPath();
+                bytes = entity.getBytes();
             }
         }
-        if (fPath != null) {
-            GlideUtils.load(fPath, civ);
+        if (bytes != null) {
+            GlideUtils.load(bytes, civ);
         }
 
         if (folderName != null) {
@@ -109,9 +106,13 @@ public class EmojiActivity extends BaseActivity<EmojiViewModel> {
                 images = data.getParcelableArrayListExtra(ImageSelector.IMAGE_SELECTED);
                 if (images != null) {
                     for (Image image : images) {
-                        String newPath = FileUtils.copyFile2Private(this, image.getPath());
-                        EmojiEntity entity = new EmojiEntity(fid, newPath);
-                        viewModel.insert(entity);
+                        EmojiEntity entity = null;
+                        try {
+                            entity = new EmojiEntity(fid, FileUtils.file2Byte(image.getPath()));
+                            viewModel.insert(entity);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

@@ -197,7 +197,7 @@ public class NativeShareTool {
             try {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, path);
+                shareIntent.putExtra(Intent.EXTRA_STREAM,path);
                 shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 shareIntent.setType("image/*");
                 // 遍历所有支持发送图片的应用。找到需要的应用

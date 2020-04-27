@@ -21,16 +21,16 @@ public class FolderEntity implements Parcelable {
     @ColumnInfo(name = "folder_name")
     private String name;                //文件夹名称
 
-    private String path;                //文件夹封面图片地址
+    private byte[] bytes;                //文件夹封面图片地址
 
     @Ignore
     public FolderEntity(String name) {
         this.name = name;
     }
 
-    public FolderEntity(String name, String path) {
+    public FolderEntity(String name, byte[] bytes) {
         this.name = name;
-        this.path = path;
+        this.bytes = bytes;
     }
 
     public int getId() {
@@ -49,12 +49,12 @@ public class FolderEntity implements Parcelable {
         this.name = name;
     }
 
-    public String getPath() {
-        return path;
+    public byte[] getBytes() {
+        return bytes;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
     }
 
     @Override
@@ -66,13 +66,13 @@ public class FolderEntity implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeString(this.name);
-        dest.writeString(this.path);
+        dest.writeByteArray(this.bytes);
     }
 
     protected FolderEntity(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
-        this.path = in.readString();
+        this.bytes = in.createByteArray();
     }
 
     public static final Creator<FolderEntity> CREATOR = new Creator<FolderEntity>() {

@@ -2,7 +2,6 @@ package com.example.emoji.folder;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,6 @@ import android.widget.ImageView;
 import com.example.emoji.Constants;
 import com.example.emoji.R;
 import com.example.emoji.data.room.entity.FolderEntity;
-import com.example.emoji.utils.ImageUtil;
 import com.example.media.bean.Image;
 import com.example.media.imageselect.images.ImageSelectActivity;
 import com.example.media.utils.FileUtils;
@@ -40,7 +38,7 @@ public class AddFolderFragment extends Fragment {
     private EditText etText;
     private FolderViewModel viewModel;
     private String folderName;
-    private String fPath;   //文件夹封面图片的地址
+    private byte[] bytes;   //文件夹封面图片
     private Image image;
     private FolderEntity entity;
     public static final int REQUEST_CODE = 1;
@@ -80,9 +78,9 @@ public class AddFolderFragment extends Fragment {
 
         if (entity != null) {
             folderName = entity.getName();
-            fPath = entity.getPath();
-            if (fPath != null) {
-                GlideUtils.load(fPath, ivFolder);
+            bytes = entity.getBytes();
+            if (bytes != null) {
+                GlideUtils.load(bytes, ivFolder);
             }
             etText.setText(folderName);
             update.setVisibility(View.VISIBLE);
@@ -100,8 +98,11 @@ public class AddFolderFragment extends Fragment {
                 etText.clearFocus();
                 //更新封面
                 if (image != null) {
-                    String newPath = FileUtils.copyFile2Private(Objects.requireNonNull(getContext()), image.getPath());
-                    entity.setPath(newPath);
+                    try {
+                        entity.setBytes(FileUtils.file2Byte(image.getPath()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 entity.setName(etText.getText().toString());
@@ -118,8 +119,11 @@ public class AddFolderFragment extends Fragment {
                 folderName = etText.getText().toString();
                 FolderEntity folderEntity = new FolderEntity(folderName);
                 if (image != null) {            //如果选择封面图
-                    String newPath = FileUtils.copyFile2Private(Objects.requireNonNull(getContext()), image.getPath());
-                    folderEntity = new FolderEntity(folderName, newPath);
+                    try {
+                        folderEntity = new FolderEntity(folderName, FileUtils.file2Byte(image.getPath()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 viewModel.insert(folderEntity);
                 Objects.requireNonNull(getActivity()).onBackPressed(); //销毁自己

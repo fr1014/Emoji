@@ -14,10 +14,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.emoji.R;
 import com.example.emoji.base.MyRecyclerViewAdapter;
 import com.example.emoji.data.room.entity.EmojiEntity;
+import com.example.media.utils.FileUtils;
 import com.example.media.utils.GlideUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,7 +53,7 @@ public class EmojiAdapter extends MyRecyclerViewAdapter<EmojiEntity> {
     protected void convert(ViewHolder holder, EmojiEntity emojiEntity, int position) {
         ImageView emoji = holder.getView(R.id.iv_emoji);
         TextView tvDelete = holder.getView(R.id.tv_del);
-        GlideUtils.load(emojiEntity.getPath(), emoji);
+        GlideUtils.load(emojiEntity.getBytes(), emoji);
         emoji.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +106,7 @@ public class EmojiAdapter extends MyRecyclerViewAdapter<EmojiEntity> {
         cvQQ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.nativeShareTool.shareImageToQQ(emojiEntity.getPath());
+                activity.nativeShareTool.shareImageToQQ(FileUtils.byte2File(emojiEntity.getBytes(), Objects.requireNonNull(context.getExternalCacheDir()).getAbsolutePath(), "emoji"));
                 dialog.dismiss();
             }
         });
@@ -112,7 +114,7 @@ public class EmojiAdapter extends MyRecyclerViewAdapter<EmojiEntity> {
         cvWeChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.nativeShareTool.shareWechatFriend(new File(emojiEntity.getPath()), true);
+                activity.nativeShareTool.shareWechatFriend(new File(FileUtils.byte2File(emojiEntity.getBytes(), Objects.requireNonNull(context.getExternalCacheDir()).getAbsolutePath(), "emoji")), true);
                 dialog.dismiss();
             }
         });

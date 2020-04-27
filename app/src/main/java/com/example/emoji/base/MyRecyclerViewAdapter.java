@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.emoji.data.room.entity.FolderEntity;
-
 import java.util.List;
 
 /**

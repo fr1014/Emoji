@@ -11,14 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.emoji.Constants;
-import com.example.emoji.data.room.entity.FolderEntity;
 import com.example.emoji.R;
 import com.example.emoji.base.MyRecyclerViewAdapter;
+import com.example.emoji.data.room.entity.FolderEntity;
 import com.example.emoji.emoji.EmojiActivity;
 import com.example.media.utils.GlideUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 创建时间:2020/4/20
@@ -48,10 +47,10 @@ public class FolderAdapter extends MyRecyclerViewAdapter<FolderEntity> {
         ImageView ivUpdate = holder.getView(R.id.iv_update);
         TextView textView = holder.getView(R.id.tv_folder);
         TextView tvEdit = holder.getView(R.id.tv_edit);
-        if (folderEntity.getPath() == null) {
+        if (folderEntity.getBytes() == null) {
             imageView.setImageResource(R.drawable.ic_launcher);
         } else {
-            GlideUtils.load(folderEntity.getPath(), imageView);
+            GlideUtils.load(folderEntity.getBytes(), imageView);
         }
         textView.setText(folderEntity.getName());
 

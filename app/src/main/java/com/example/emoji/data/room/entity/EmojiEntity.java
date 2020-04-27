@@ -8,8 +8,6 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import java.util.Arrays;
-
 /**
  * 创建时间:2020/4/22
  * 作者:fr
@@ -32,7 +30,7 @@ public class EmojiEntity implements Parcelable {
 
     private int fid;    //所在文件夹的id
 
-    private String path;   //私有目录下的路径
+    private byte[] bytes;   //私有目录下的路径
 
     public int getId() {
         return id;
@@ -50,12 +48,17 @@ public class EmojiEntity implements Parcelable {
         this.fid = fid;
     }
 
-    public String getPath() {
-        return path;
+    public byte[] getBytes() {
+        return bytes;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    public EmojiEntity(int fid, byte[] bytes) {
+        this.fid = fid;
+        this.bytes = bytes;
     }
 
     @Override
@@ -67,18 +70,13 @@ public class EmojiEntity implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeInt(this.fid);
-        dest.writeString(this.path);
-    }
-
-    public EmojiEntity(int fid, String path) {
-        this.fid = fid;
-        this.path = path;
+        dest.writeByteArray(this.bytes);
     }
 
     protected EmojiEntity(Parcel in) {
         this.id = in.readInt();
         this.fid = in.readInt();
-        this.path = in.readString();
+        this.bytes = in.createByteArray();
     }
 
     public static final Creator<EmojiEntity> CREATOR = new Creator<EmojiEntity>() {

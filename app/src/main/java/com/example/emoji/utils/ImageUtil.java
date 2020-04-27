@@ -33,22 +33,6 @@ public class ImageUtil {
     }
 
     /**
-     * @param path 图片路径
-     * @return 二进制
-     * @throws IOException
-     */
-    public static byte[] imgSdCard(String path) throws IOException {
-        FileInputStream fis = new FileInputStream(path);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = fis.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        return out.toByteArray();
-    }
-
-    /**
      * @param bytes 二进制
      * @return Bitmap
      */
