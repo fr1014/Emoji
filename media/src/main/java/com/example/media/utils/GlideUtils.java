@@ -2,12 +2,10 @@ package com.example.media.utils;
 
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.media.R;
 
 import java.io.File;
 
@@ -28,7 +26,7 @@ public class GlideUtils {
     public static void load(String path, ImageView view, Application application) {
         Glide
                 .with(view.getContext())
-                .load(FileManager.file2Uri(application, new File(path)))
+                .load(FileUtils.file2Uri(application, new File(path)))
                 .into(view);
     }
 
@@ -36,6 +34,7 @@ public class GlideUtils {
         Glide
                 .with(view.getContext())
                 .load(new File(path))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(view);
     }
 

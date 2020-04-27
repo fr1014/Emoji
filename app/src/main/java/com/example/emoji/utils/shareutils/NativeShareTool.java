@@ -16,6 +16,10 @@ import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
+import com.example.emoji.utils.ImageUtil;
+import com.example.emoji.utils.ToastUtil;
+import com.example.media.utils.FileUtils;
+
 import java.io.File;
 import java.util.List;
 
@@ -178,7 +182,31 @@ public class NativeShareTool {
                 mContext.startActivity(Intent.createChooser(shareIntent, "Share"));
             } catch (Exception e) {
 //            ContextUtil.getInstance().showToastMsg("分享图片到**失败");
-            }finally {
+            } finally {
+            }
+        }
+    }
+
+    /**
+     * 分享图片给QQ好友
+     *
+     * @param path 图片路径
+     */
+    public void shareImageToQQ(String path) {
+        if (PlatformUtil.isQQClientAvailable(mContext)) {
+            try {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, path);
+                shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                shareIntent.setType("image/*");
+                // 遍历所有支持发送图片的应用。找到需要的应用
+                ComponentName componentName = new ComponentName(PlatformUtil.PACKAGE_QQ, PlatformUtil.ACTIVITY_SHARE_QQ_FRIEND);
+                shareIntent.setComponent(componentName);
+                //1.解决在QQ打开的情况下，会先启动QQ再跳出分享联系人的闪烁问题
+                mContext.startActivity(Intent.createChooser(shareIntent, "Share"));
+            } catch (Exception e) {
+                ToastUtil.toastShort(mContext, "分享图片到QQ失败");
             }
         }
     }
@@ -215,7 +243,7 @@ public class NativeShareTool {
                 //2.解决在QQ打开的情况下，不弹出分享联系人的问题
                 mContext.startActivity(Intent.createChooser(shareIntent, "Share"));
             } catch (Exception e) {
-                Toast.makeText(mContext,"分享失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "分享失败", Toast.LENGTH_SHORT).show();
             }
         }
     }

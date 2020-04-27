@@ -21,12 +21,14 @@ import com.example.emoji.utils.ImageUtil;
 import com.example.emoji.utils.shareutils.NativeShareTool;
 import com.example.media.bean.Image;
 import com.example.media.imageselect.images.ImageSelectActivity;
+import com.example.media.utils.FileUtils;
 import com.example.media.utils.GlideUtils;
 import com.example.media.utils.ImageSelector;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,7 +36,7 @@ public class EmojiActivity extends BaseActivity<EmojiViewModel> {
 
     private String folderName;
     private int fid;    //文件夹在数据库中的id
-    private Bitmap bitmap;
+    private String fPath;//文件夹封面图片地址
     private CircleImageView civ;
     private TextView tvFolder;
     private MotionEventImageView motionView;
@@ -70,11 +72,11 @@ public class EmojiActivity extends BaseActivity<EmojiViewModel> {
             if (entity != null) {
                 fid = entity.getId();
                 folderName = entity.getName();
-                bitmap = ImageUtil.getBitmapFromByte(entity.getImage());
+                fPath = entity.getPath();
             }
         }
-        if (bitmap != null) {
-            GlideUtils.load(bitmap, civ);
+        if (fPath != null) {
+            GlideUtils.load(fPath, civ);
         }
 
         if (folderName != null) {
@@ -85,6 +87,7 @@ public class EmojiActivity extends BaseActivity<EmojiViewModel> {
     @Override
     public void initViewModel() {
         viewModel = new ViewModelProvider(this).get(EmojiViewModel.class);
+        adapter.setViewModel(viewModel);
         viewModel.getAllEmojisLive(fid).observe(this, new Observer<List<EmojiEntity>>() {
             @Override
             public void onChanged(List<EmojiEntity> emojiEntities) {
@@ -104,12 +107,11 @@ public class EmojiActivity extends BaseActivity<EmojiViewModel> {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE && data != null) {
                 images = data.getParcelableArrayListExtra(ImageSelector.IMAGE_SELECTED);
-                for (Image image : images) {
-                    try {
-                        EmojiEntity entity = new EmojiEntity(fid,ImageUtil.imgSdCard(image.getPath()));
+                if (images != null) {
+                    for (Image image : images) {
+                        String newPath = FileUtils.copyFile2Private(this, image.getPath());
+                        EmojiEntity entity = new EmojiEntity(fid, newPath);
                         viewModel.insert(entity);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
                 }
             }

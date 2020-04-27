@@ -140,35 +140,6 @@ public class FileManager {
 //        return newFolder;
 //    }
 
-    public static Uri getImageContentUri(Context context, String path) {
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID}, MediaStore.Images.Media.DATA + "=? ",
-                new String[]{path}, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
-            Uri baseUri = Uri.parse("content://media/external/images/media");
-            return Uri.withAppendedPath(baseUri, "" + id);
-        } else {
-            // 如果图片不在手机的共享图片数据库，就先把它插入。
-            if (new File(path).exists()) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.DATA, path);
-                return context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            } else {
-                return null;
-            }
-        }
-    }
-
-    public static Uri file2Uri(Application application,@NonNull final File file) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            String authority = application.getPackageName() + ".fr.provider";
-            return FileProvider.getUriForFile(application, authority, file);
-        } else {
-            return Uri.fromFile(file);
-        }
-    }
-
     public interface DataCallBack {
         //        void onSuccess(ArrayList<ImgFolder> folders);
         void onSuccess(List<Image> images, HashMap<String, List<Image>> folders);

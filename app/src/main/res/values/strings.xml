@@ -7,4 +7,5 @@
     <string name="confirm">创建</string>
     <string name="update">更新</string>
     <string name="edit">编辑</string>
+    <string name="delete">删除</string>
 </resources>

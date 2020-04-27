@@ -32,7 +32,7 @@ public class EmojiEntity implements Parcelable {
 
     private int fid;    //所在文件夹的id
 
-    private byte[] image;   //二进制文件存储图片
+    private String path;   //私有目录下的路径
 
     public int getId() {
         return id;
@@ -50,21 +50,12 @@ public class EmojiEntity implements Parcelable {
         this.fid = fid;
     }
 
-    public byte[] getImage() {
-        return image;
+    public String getPath() {
+        return path;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
-    @Override
-    public String toString() {
-        return "EmojiEntity{" +
-                "id=" + id +
-                ", fid=" + fid +
-                ", image=" + Arrays.toString(image) +
-                '}';
+    public void setPath(String path) {
+        this.path = path;
     }
 
     @Override
@@ -76,24 +67,21 @@ public class EmojiEntity implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeInt(this.fid);
-        dest.writeByteArray(this.image);
+        dest.writeString(this.path);
     }
 
-    public EmojiEntity() {
-    }
-
-    public EmojiEntity(int fid, byte[] image) {
+    public EmojiEntity(int fid, String path) {
         this.fid = fid;
-        this.image = image;
+        this.path = path;
     }
 
     protected EmojiEntity(Parcel in) {
         this.id = in.readInt();
         this.fid = in.readInt();
-        this.image = in.createByteArray();
+        this.path = in.readString();
     }
 
-    public static final Parcelable.Creator<EmojiEntity> CREATOR = new Parcelable.Creator<EmojiEntity>() {
+    public static final Creator<EmojiEntity> CREATOR = new Creator<EmojiEntity>() {
         @Override
         public EmojiEntity createFromParcel(Parcel source) {
             return new EmojiEntity(source);

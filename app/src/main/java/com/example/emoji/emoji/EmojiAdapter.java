@@ -5,8 +5,10 @@ import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 
 import com.example.emoji.R;
 import com.example.emoji.base.MyRecyclerViewAdapter;
@@ -26,12 +28,17 @@ import java.util.List;
  */
 public class EmojiAdapter extends MyRecyclerViewAdapter<EmojiEntity> {
     private EmojiActivity activity;
+    private EmojiViewModel viewModel;
 
     public EmojiAdapter(Context context) {
         this.context = context;
         activity = (EmojiActivity) context;
         this.layoutId = R.layout.item_emoji;
         this.list = new ArrayList<>();
+    }
+
+    public void setViewModel(ViewModel viewModel){
+        this.viewModel = (EmojiViewModel) viewModel;
     }
 
     @NonNull
@@ -43,13 +50,29 @@ public class EmojiAdapter extends MyRecyclerViewAdapter<EmojiEntity> {
     @Override
     protected void convert(ViewHolder holder, EmojiEntity emojiEntity, int position) {
         ImageView emoji = holder.getView(R.id.iv_emoji);
-        GlideUtils.load(emojiEntity.getImage(),emoji);
+        TextView tvDelete = holder.getView(R.id.tv_del);
+        GlideUtils.load(emojiEntity.getPath(),emoji);
         emoji.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                activity.nativeShareTool.shareImageToQQ(ImageUtil.getBitmapFromByte(emojiEntity.getImage()));
-                activity.nativeShareTool.shareImageToQQ(Resource.getInstance(context).getPicFile(emojiEntity.getImage()));
+                activity.nativeShareTool.shareImageToQQ(emojiEntity.getPath());
+            }
+        });
 
+        emoji.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                tvDelete.setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
+
+        tvDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (viewModel!= null){
+                    viewModel.delete(emojiEntity);
+                }
             }
         });
     }

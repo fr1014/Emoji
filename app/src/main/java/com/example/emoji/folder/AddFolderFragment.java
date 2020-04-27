@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,11 +38,9 @@ import java.util.Objects;
 public class AddFolderFragment extends Fragment {
     private ImageView ivFolder;
     private EditText etText;
-    private Button confirm;
-    private Button update;
     private FolderViewModel viewModel;
     private String folderName;
-    private Bitmap bitmap;   //图片二进制文件转化
+    private String fPath;   //文件夹封面图片的地址
     private Image image;
     private FolderEntity entity;
     public static final int REQUEST_CODE = 1;
@@ -78,14 +75,14 @@ public class AddFolderFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ivFolder = view.findViewById(R.id.iv_folder);
         etText = view.findViewById(R.id.et_text);
-        confirm = view.findViewById(R.id.confirm);
-        update = view.findViewById(R.id.update);
+        Button confirm = view.findViewById(R.id.confirm);
+        Button update = view.findViewById(R.id.update);
 
         if (entity != null) {
-            bitmap = ImageUtil.getBitmapFromByte(entity.getImage());
             folderName = entity.getName();
-            if (bitmap != null) {
-                GlideUtils.load(bitmap, ivFolder);
+            fPath = entity.getPath();
+            if (fPath != null) {
+                GlideUtils.load(fPath, ivFolder);
             }
             etText.setText(folderName);
             update.setVisibility(View.VISIBLE);
@@ -101,14 +98,12 @@ public class AddFolderFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 etText.clearFocus();
-                try {
-                    //更新封面
-                    if (image != null) {
-                        entity.setImage(ImageUtil.imgSdCard(image.getPath()));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                //更新封面
+                if (image != null) {
+                    String newPath = FileUtils.copyFile2Private(Objects.requireNonNull(getContext()), image.getPath());
+                    entity.setPath(newPath);
                 }
+
                 entity.setName(etText.getText().toString());
                 viewModel.update(entity);
                 Objects.requireNonNull(getActivity()).onBackPressed(); //销毁自己
@@ -122,13 +117,9 @@ public class AddFolderFragment extends Fragment {
                 etText.clearFocus();
                 folderName = etText.getText().toString();
                 FolderEntity folderEntity = new FolderEntity(folderName);
-                if (image != null) {            //如果没有选择封面图
-                    try {
-                        byte[] img = ImageUtil.imgSdCard(image.getPath());
-                        folderEntity = new FolderEntity(folderName, img);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (image != null) {            //如果选择封面图
+                    String newPath = FileUtils.copyFile2Private(Objects.requireNonNull(getContext()), image.getPath());
+                    folderEntity = new FolderEntity(folderName, newPath);
                 }
                 viewModel.insert(folderEntity);
                 Objects.requireNonNull(getActivity()).onBackPressed(); //销毁自己
@@ -144,8 +135,6 @@ public class AddFolderFragment extends Fragment {
 
     }
 
-    private static final String TAG = "AddFolderFragment";
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -155,8 +144,7 @@ public class AddFolderFragment extends Fragment {
                 if (images != null) {
                     image = images.get(0);
                     if (image != null) {
-                        String newPath = Objects.requireNonNull(getContext()).getExternalCacheDir() + "/" + FileUtils.getFileName(image.getPath());
-                        FileUtils.copyFile(image.getPath(), newPath);
+                        String newPath = FileUtils.copyFile2Private(Objects.requireNonNull(getContext()), image.getPath());
                         GlideUtils.load(newPath, ivFolder);
                     }
                 }

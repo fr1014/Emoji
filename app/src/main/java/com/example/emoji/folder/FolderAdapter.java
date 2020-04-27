@@ -48,10 +48,10 @@ public class FolderAdapter extends MyRecyclerViewAdapter<FolderEntity> {
         ImageView ivUpdate = holder.getView(R.id.iv_update);
         TextView textView = holder.getView(R.id.tv_folder);
         TextView tvEdit = holder.getView(R.id.tv_edit);
-        if (folderEntity.getImage() == null) {
+        if (folderEntity.getPath() == null) {
             imageView.setImageResource(R.drawable.ic_launcher);
         } else {
-            GlideUtils.load(folderEntity.getImage(), imageView);
+            GlideUtils.load(folderEntity.getPath(), imageView);
         }
         textView.setText(folderEntity.getName());
 
