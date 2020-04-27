@@ -8,6 +8,7 @@ import com.example.emoji.data.room.dao.EmojiDao;
 import com.example.emoji.data.room.entity.EmojiEntity;
 import com.example.emoji.rx.RxSchedulers;
 import com.example.emoji.rx.SimpleConsumer;
+import com.example.media.utils.FileUtils;
 
 import java.util.List;
 
@@ -50,6 +51,7 @@ public class EmojiViewModel extends ViewModel {
                 .subscribe(new SimpleConsumer<EmojiEntity>() {
                     @Override
                     protected void accept(EmojiEntity emojiEntity) {
+                        FileUtils.deleteSingleFile(emojiEntity.getPath());   //删除单文件
                         emojiDao.delete(emojiEntity);
                     }
                 });

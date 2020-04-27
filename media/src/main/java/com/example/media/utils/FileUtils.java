@@ -97,6 +97,12 @@ public class FileUtils {
         return new File(filePath).exists();
     }
 
+    /**
+     * 复制文件
+     * @param oldPath$Name 源文件路径
+     * @param newPath$Name 目标路径
+     * @return
+     */
     public static boolean copyFile(String oldPath$Name, String newPath$Name) {
         try {
             File oldFile = new File(oldPath$Name);
@@ -159,8 +165,9 @@ public class FileUtils {
 
     /**
      * 将外部存储的文件拷贝到应用内部私有的内存
+     *
      * @param context
-     * @param oldPath
+     * @param oldPath 源文件路径
      *
      * @return 内部私有文件的路径
      */
@@ -168,5 +175,19 @@ public class FileUtils {
         String newPath = context.getExternalCacheDir() + "/" + FileUtils.getFileName(oldPath);
         FileUtils.copyFile(oldPath,newPath);
         return newPath;
+    }
+
+    /** 删除单个文件
+     * @param filePath$Name 要删除的文件的文件名
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    public static boolean deleteSingleFile(String filePath$Name) {
+        File file = new File(filePath$Name);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            return file.delete();
+        } else {
+            return false;
+        }
     }
 }
