@@ -1,14 +1,17 @@
 package com.example.emoji.folder;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import com.example.emoji.Constants;
 import com.example.emoji.R;
@@ -18,6 +21,8 @@ import com.example.emoji.emoji.EmojiActivity;
 import com.example.media.utils.GlideUtils;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * 创建时间:2020/4/20
@@ -47,6 +52,7 @@ public class FolderAdapter extends MyRecyclerViewAdapter<FolderEntity> {
         ImageView ivUpdate = holder.getView(R.id.iv_update);
         TextView textView = holder.getView(R.id.tv_folder);
         TextView tvEdit = holder.getView(R.id.tv_edit);
+        TextView tvDel = holder.getView(R.id.tv_delete);
         if (folderEntity.getBytes() == null) {
             imageView.setImageResource(R.drawable.ic_launcher);
         } else {
@@ -59,7 +65,7 @@ public class FolderAdapter extends MyRecyclerViewAdapter<FolderEntity> {
             public void onClick(View v) {
                 Intent intent = new Intent(context, EmojiActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable(Constants.FOLDER_ENTITY,folderEntity);
+                bundle.putParcelable(Constants.FOLDER_ENTITY, folderEntity);
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }
@@ -70,13 +76,40 @@ public class FolderAdapter extends MyRecyclerViewAdapter<FolderEntity> {
             public boolean onLongClick(View v) {
                 ivUpdate.setVisibility(View.VISIBLE);
                 tvEdit.setVisibility(View.VISIBLE);
+                tvDel.setVisibility(View.VISIBLE);
                 return true;
             }
         });
 
-        ivUpdate.setOnClickListener(new View.OnClickListener() {
+        tvDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                final AlertDialog dialog = builder.setIcon(R.drawable.ic_launcher)
+                        .setTitle("提示")
+                        .setMessage("确认删除该文件夹？")
+                        // 或者在这里处理一些事件
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                homeActivity.viewModel.delete(folderEntity);
+                                tvDel.setVisibility(View.INVISIBLE);
+                                ivUpdate.setVisibility(View.INVISIBLE);
+                                tvEdit.setVisibility(View.INVISIBLE);
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .create();
+                dialog.show();
+
+            }
+        });
+
+        tvEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvDel.setVisibility(View.INVISIBLE);
                 ivUpdate.setVisibility(View.INVISIBLE);
                 tvEdit.setVisibility(View.INVISIBLE);
                 if (homeActivity != null) {
@@ -88,6 +121,8 @@ public class FolderAdapter extends MyRecyclerViewAdapter<FolderEntity> {
                 }
             }
         });
+
+
     }
 
 }

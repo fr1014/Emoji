@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel;
  * 邮箱:1546352238@qq.com
  */
 public abstract class BaseActivity<VM extends ViewModel> extends AppCompatActivity {
-    protected VM viewModel;
+    public VM viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
