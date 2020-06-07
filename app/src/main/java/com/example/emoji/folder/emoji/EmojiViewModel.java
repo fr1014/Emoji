@@ -1,4 +1,4 @@
-package com.example.emoji.emoji;
+package com.example.emoji.folder.emoji;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
@@ -8,7 +8,6 @@ import com.example.emoji.data.room.dao.EmojiDao;
 import com.example.emoji.data.room.entity.EmojiEntity;
 import com.example.emoji.rx.RxSchedulers;
 import com.example.emoji.rx.SimpleConsumer;
-import com.example.media.utils.FileUtils;
 
 import java.util.List;
 

@@ -13,19 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".emoji.EmojiActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".folder.HomeActivity">
+        <activity android:name=".BottomNavigationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!--        AndroidManifest需要加一个provider的标签，里面的authorities就是我们上面需要调用的一个常量-->
-        <!--        如果你有多个module的话也没关系，所有的module只要有一个地方写了这个就行，因为app打包以后所有的AndroidManifest文件将会合并到一起-->
+        <activity
+            android:name=".folder.emoji.EmojiActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <!-- AndroidManifest需要加一个provider的标签，里面的authorities就是我们上面需要调用的一个常量 -->
+        <!-- 如果你有多个module的话也没关系，所有的module只要有一个地方写了这个就行，因为app打包以后所有的AndroidManifest文件将会合并到一起 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.share.fr.fileprovider"

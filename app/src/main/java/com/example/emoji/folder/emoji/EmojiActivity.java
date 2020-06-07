@@ -1,4 +1,4 @@
-package com.example.emoji.emoji;
+package com.example.emoji.folder.emoji;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;

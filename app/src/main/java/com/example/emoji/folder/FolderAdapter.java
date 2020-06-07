@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,17 +11,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 
+import com.example.emoji.BottomNavigationActivity;
 import com.example.emoji.Constants;
 import com.example.emoji.R;
 import com.example.emoji.base.MyRecyclerViewAdapter;
 import com.example.emoji.data.room.entity.FolderEntity;
-import com.example.emoji.emoji.EmojiActivity;
+import com.example.emoji.folder.emoji.EmojiActivity;
 import com.example.media.utils.GlideUtils;
 
 import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * 创建时间:2020/4/20
@@ -31,11 +31,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class FolderAdapter extends MyRecyclerViewAdapter<FolderEntity> {
 
-    private HomeActivity homeActivity;
+    private FolderFragment fragment;
 
-    public FolderAdapter(Context context) {
+    public FolderAdapter(Context context, Fragment fragment) {
         this.context = context;
-        homeActivity = (HomeActivity) context;
+        this.fragment = (FolderFragment) fragment;
         this.layoutId = R.layout.item_emoji_folder;
         this.list = new ArrayList<>();
     }
@@ -93,7 +93,7 @@ public class FolderAdapter extends MyRecyclerViewAdapter<FolderEntity> {
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                homeActivity.viewModel.delete(folderEntity);
+                                fragment.viewModel.delete(folderEntity);
                                 tvDel.setVisibility(View.INVISIBLE);
                                 ivUpdate.setVisibility(View.INVISIBLE);
                                 tvEdit.setVisibility(View.INVISIBLE);
@@ -112,12 +112,12 @@ public class FolderAdapter extends MyRecyclerViewAdapter<FolderEntity> {
                 tvDel.setVisibility(View.INVISIBLE);
                 ivUpdate.setVisibility(View.INVISIBLE);
                 tvEdit.setVisibility(View.INVISIBLE);
-                if (homeActivity != null) {
-                    View view = homeActivity.getMotionView();
+                if (fragment != null) {
+                    View view = fragment.motionView;
                     if (view != null) {
                         view.setVisibility(View.INVISIBLE);
                     }
-                    homeActivity.addFragment(AddFolderFragment.getInstance(folderEntity));
+                    fragment.addFragment(AddFolderFragment.getInstance(folderEntity));
                 }
             }
         });

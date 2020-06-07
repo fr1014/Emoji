@@ -1,4 +1,4 @@
-package com.example.emoji.emoji;
+package com.example.emoji.folder.emoji;
 
 import android.content.Context;
 import android.view.LayoutInflater;
