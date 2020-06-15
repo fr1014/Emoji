@@ -20,7 +20,7 @@ import java.io.File;
 public class GlideUtils {
 
     public static void load(ImageView view, String url) {
-        if (StringUtils.isEmpty(url)) {
+        if (!StringUtils.isEmpty(url)) {
             Glide.with(view.getContext())
                     .load(url)
                     .error(R.drawable.iv_head)

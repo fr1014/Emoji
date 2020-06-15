@@ -22,16 +22,12 @@ import com.example.emoji.utils.ToastUtil;
 import com.example.media.bean.Image;
 import com.example.media.imageselect.images.ImageSelectActivity;
 import com.example.media.utils.ImageSelector;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UploadFileListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PersonFragment extends BaseFragment<PersonViewModel> implements View.OnClickListener {
@@ -45,6 +41,7 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
     private TextView attention; //关注
     private MutableLiveData<MyUser> liveData;
     private MutableLiveData<String> picLiveData;
+    private StorageReference storageRef;
 
     public PersonFragment() {
     }
@@ -89,12 +86,13 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
 
     @Override
     protected void initData() {
+        createReference();
 
         liveData.observe(this, user -> {
             login.setVisibility(View.VISIBLE);
             unLogin.setVisibility(View.INVISIBLE);
             Log.d(TAG, "----onChanged: " + user.toString());
-            GlideUtils.load(head, "");
+            GlideUtils.load(head, user.getHeadPicUrl());
             userName.setText(user.getUsername());
         });
 
@@ -138,10 +136,16 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
                 if (imageList != null) {
                     Image image = imageList.get(0);
                     Log.d(TAG, "----onActivityResult: " + image.getPath());
-                    viewModel.uploadPic(image.getPath());
+                    viewModel.uploadFiles(storageRef,image.getPath());
                 }
             }
         }
 
+    }
+
+    //创建FirebaseStorage引用
+    public void createReference(){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.emoji.person;
 
 import android.app.Application;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,8 +10,18 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.emoji.data.bmob.MyUser;
 import com.example.emoji.utils.ToastUtil;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
@@ -104,11 +115,12 @@ public class PersonViewModel extends AndroidViewModel {
      * @param bmobUser  BmobUser.getCurrentUser(application);
      * @param newUser 需要更新的新的用户对象
      */
-    public void update(BmobUser bmobUser,BmobUser newUser){
+    public void update(BmobUser bmobUser,MyUser newUser){
         newUser.update(bmobUser.getObjectId(),new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if(e==null){
+                    userMutableLiveData.postValue(newUser);
                     ToastUtil.toastShort("更新用户信息成功");
                 }else{
                     ToastUtil.toastShort("更新用户信息失败:" + e.getMessage());
@@ -118,33 +130,56 @@ public class PersonViewModel extends AndroidViewModel {
         });
     }
 
-    /**
-     *
-     * @param picPath 图片路径
-     * 图片的url
-     */
-    public void uploadPic(String picPath){
-        BmobFile bmobFile = new BmobFile(new File(picPath));
-        bmobFile.uploadblock(new UploadFileListener() {
+//    public void includesForCreateReference(String path) {
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference storageRef = storage.getReference();
+//        StorageReference imagesRef = storageRef.child("images");
+//        StorageReference spaceRef = storageRef.child(path);
+//    }
 
+    public void uploadFiles(StorageReference storageRef,String path){
+
+//        StorageReference imagesRef = storageRef.child("images");
+
+        Uri file = Uri.fromFile(new File(path));
+        StorageReference riversRef = storageRef.child("headFiles/"+Objects.requireNonNull(file.getLastPathSegment()));
+        UploadTask uploadTask = riversRef.putFile(file);
+//
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
-            public void done(BmobException e) {
-                if(e==null){
-                    //返回的上传文件的完整地址
-                    stringMutableLiveData.postValue(bmobFile.getFileUrl());
-                    ToastUtil.toastShort("上传头像成功");
-                }else{
-                    ToastUtil.toastShort("上传头像失败");
-                    Log.d(TAG, "----done: "+e.getMessage());
-                }
-
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                ToastUtil.toastShort("上传图片失败！！！");
+                Log.d(TAG, "----onFailure: "+exception.toString());
             }
-
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onProgress(Integer value) {
-                // 返回的上传进度（百分比）
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+                ToastUtil.toastShort("上传图片成功！！！");
+                getDownloadUrl(storageRef,path);
+            }
+        });
+
+    }
+
+    public void getDownloadUrl(StorageReference storageRef,String path){
+        Uri file = Uri.fromFile(new File(path));
+        storageRef.child("headFiles/"+Objects.requireNonNull(file.getLastPathSegment())).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d(TAG, "----onSuccess: "+uri);
+                stringMutableLiveData.postValue(uri.toString());
+                // Got the download URL for 'users/me/profile.png'
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.d(TAG, "---onFailure: "+exception.toString());
             }
         });
     }
-
 }

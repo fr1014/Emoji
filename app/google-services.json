@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "504047705833",
+    "firebase_url": "https://emoji-dedcb.firebaseio.com",
+    "project_id": "emoji-dedcb",
+    "storage_bucket": "emoji-dedcb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504047705833:android:df884ff12bc9b46a511a78",
+        "android_client_info": {
+          "package_name": "com.example.emoji"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504047705833-q2k1stbka4cuf4h3q2ct0gkvk48g9msi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.emoji",
+            "certificate_hash": "a1320fdccffc12189af6e83d66f858cbfe567440"
+          }
+        },
+        {
+          "client_id": "504047705833-eth81uupvd304sago53112sl0ni8t4qe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQEc3Ik-lQC863xWaoijM87Ftlb-CsDno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "504047705833-eth81uupvd304sago53112sl0ni8t4qe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
