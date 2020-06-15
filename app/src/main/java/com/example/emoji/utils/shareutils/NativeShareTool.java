@@ -206,7 +206,7 @@ public class NativeShareTool {
                 //1.解决在QQ打开的情况下，会先启动QQ再跳出分享联系人的闪烁问题
                 mContext.startActivity(Intent.createChooser(shareIntent, "Share"));
             } catch (Exception e) {
-                ToastUtil.toastShort(mContext, "分享图片到QQ失败");
+                ToastUtil.toastShort("分享图片到QQ失败");
             }
         }
     }

@@ -10,15 +10,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.emoji.Constants;
 import com.example.emoji.R;
+import com.example.emoji.base.BaseFragment;
 import com.example.emoji.data.room.entity.FolderEntity;
 import com.example.media.bean.Image;
 import com.example.media.imageselect.images.ImageSelectActivity;
@@ -33,7 +36,7 @@ import java.util.Objects;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddFolderFragment extends Fragment {
+public class AddFolderFragment extends BaseFragment<FolderViewModel> {
     private ImageView ivFolder;
     private EditText etText;
     private FolderViewModel viewModel;
@@ -63,14 +66,20 @@ public class AddFolderFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_folder, container, false);
+    protected int getLayoutRes() {
+        return R.layout.fragment_add_folder;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void initViewModel() {
+        Activity activity = this.getActivity();
+        if (activity != null) {
+            viewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(FolderViewModel.class);
+        }
+    }
+
+    @Override
+    protected void initView(View view) {
         ivFolder = view.findViewById(R.id.iv_folder);
         etText = view.findViewById(R.id.et_text);
         Button confirm = view.findViewById(R.id.confirm);
@@ -85,11 +94,6 @@ public class AddFolderFragment extends Fragment {
             etText.setText(folderName);
             update.setVisibility(View.VISIBLE);
             confirm.setVisibility(View.INVISIBLE);
-        }
-
-        Activity activity = this.getActivity();
-        if (activity != null) {
-            viewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(FolderViewModel.class);
         }
 
         update.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +140,10 @@ public class AddFolderFragment extends Fragment {
                 ImageSelectActivity.startActivity(AddFolderFragment.this, REQUEST_CODE, 1);
             }
         });
+    }
+
+    @Override
+    protected void initData() {
 
     }
 
@@ -155,4 +163,15 @@ public class AddFolderFragment extends Fragment {
             }
         }
     }
+
+    private static final String TAG = "AddFolderFragment";
+    /*重写父类的onBackPressed*/
+    @Override
+    public boolean onBackPressed() {
+        assert getParentFragment() != null;
+        getParentFragment().getChildFragmentManager().popBackStack();
+        Log.d(TAG, "----onBackPressed: ");
+        return true;
+    }
+
 }

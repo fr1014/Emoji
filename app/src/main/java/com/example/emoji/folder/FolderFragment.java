@@ -9,15 +9,19 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.customview.MotionEventImageView;
 import com.example.emoji.R;
+import com.example.emoji.base.BaseFragment;
+
+import java.util.List;
 
 
-public class FolderFragment extends Fragment {
+public class FolderFragment extends BaseFragment<FolderViewModel> {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -42,20 +46,7 @@ public class FolderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-        viewModel = new ViewModelProvider(getActivity()).get(FolderViewModel.class);
 
-        viewModel.getGetAllFoldersLive().observe(this, folderEntities -> adapter.setData(folderEntities));
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_folder, container, false);
     }
 
     @Override
@@ -64,7 +55,20 @@ public class FolderFragment extends Fragment {
         initView(view);
     }
 
-    private void initView(View view){
+    @Override
+    protected void initViewModel() {
+        viewModel = new ViewModelProvider(getActivity()).get(FolderViewModel.class);
+
+        viewModel.getGetAllFoldersLive().observe(this, folderEntities -> adapter.setData(folderEntities));
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.fragment_folder;
+    }
+
+    @Override
+    protected void initView(View view) {
         motionView = view.findViewById(R.id.iv_motion);
 
         recyclerView = view.findViewById(R.id.rv_folder);
@@ -81,6 +85,12 @@ public class FolderFragment extends Fragment {
         });
     }
 
+
+    @Override
+    protected void initData() {
+
+    }
+
     public void addFragment(Fragment fragment){
         getChildFragmentManager()
                 .beginTransaction()
@@ -89,4 +99,21 @@ public class FolderFragment extends Fragment {
                 .commit();
     }
 
+    private static final String TAG = "FolderFragment";
+    @Override
+    public boolean onBackPressed() {
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+
+        for (Fragment fragment : fragments) {
+            /*如果是自己封装的Fragment的子类  判断是否需要处理返回事件*/
+            if (fragment instanceof com.example.emoji.base.BaseFragment) {
+                if (((com.example.emoji.base.BaseFragment) fragment).onBackPressed()) {
+                    /*在Fragment中处理返回事件*/
+                    Log.d(TAG, "----onBackPressed: ");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

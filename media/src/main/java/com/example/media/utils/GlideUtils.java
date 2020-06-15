@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.media.R;
 
 import java.io.File;
 
@@ -22,6 +23,16 @@ public class GlideUtils {
 //                .load(FileManager.getImageContentUri(view.getContext(), path))
 //                .into(view);
 //    }
+
+    public static void load(ImageView view, String url) {
+        if (StringUtils.isEmpty(url)) {
+            Glide
+                    .with(view.getContext())
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(view);
+        }
+    }
 
     public static void load(String path, ImageView view, Application application) {
         Glide
@@ -45,7 +56,7 @@ public class GlideUtils {
                 .into(view);
     }
 
-    public static void load(byte[] bytes,ImageView view) {
+    public static void load(byte[] bytes, ImageView view) {
         Glide
                 .with(view.getContext())
                 .load(bytes)

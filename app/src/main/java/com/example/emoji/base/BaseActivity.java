@@ -1,4 +1,6 @@
 package com.example.emoji.base;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -27,7 +29,9 @@ public abstract class BaseActivity<VM extends ViewModel> extends AppCompatActivi
 
     protected abstract void initView();
 
-    protected abstract void initBundle();
+    protected void initBundle(){
+
+    }
 
     public void initViewModel(){
 
@@ -35,5 +39,10 @@ public abstract class BaseActivity<VM extends ViewModel> extends AppCompatActivi
 
     public void initData(){
 
+    }
+
+    public void startActivity(Activity activity,Class clzz){
+        Intent intent = new Intent(activity,clzz);
+        startActivity(intent);
     }
 }

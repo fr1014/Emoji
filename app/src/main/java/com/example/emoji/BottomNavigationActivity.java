@@ -6,12 +6,17 @@ import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.emoji.community.CommunityFragment;
 import com.example.emoji.folder.FolderFragment;
+import com.example.emoji.person.PersonFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.permission.Permission;
 import com.permission.PermissionListener;
 import com.permission.PermissionUtils;
+
+import java.util.List;
 
 public class BottomNavigationActivity extends AppCompatActivity {
     private BottomNavigationView mNavigationView;
@@ -22,7 +27,7 @@ public class BottomNavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_navigation);
 
-        mFragments = new Fragment[]{FolderFragment.getInstance(),FolderFragment.getInstance(),FolderFragment.getInstance()};
+        mFragments = new Fragment[]{FolderFragment.getInstance(), CommunityFragment.getInstance(), PersonFragment.getInstance()};
 
         initView();
         initPermission();
@@ -78,5 +83,23 @@ public class BottomNavigationActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Permission.onRequestPermissionResult(requestCode, permissions, grantResults);
+    }
+
+    private static final String TAG = "BottomNavigationActivit";
+    @Override
+    public void onBackPressed() {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+
+        for (Fragment fragment : fragments) {
+            /*如果是自己封装的Fragment的子类  判断是否需要处理返回事件*/
+            if (fragment instanceof com.example.emoji.base.BaseFragment) {
+                if (((com.example.emoji.base.BaseFragment) fragment).onBackPressed()) {
+                    /*在Fragment中处理返回事件*/
+                    Log.d(TAG, "----onBackPressed: ");
+                    return;
+                }
+            }
+        }
+        super.onBackPressed();
     }
 }

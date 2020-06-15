@@ -6,6 +6,7 @@ import com.example.emoji.data.room.AppDataBase;
 import com.example.emoji.rx.RxSchedulers;
 import com.example.emoji.rx.SimpleConsumer;
 
+import cn.bmob.v3.Bmob;
 import io.reactivex.Observable;
 
 /**
@@ -30,6 +31,8 @@ public class MyApplication extends Application {
                         dataBase = AppDataBase.getInstance(application);
                     }
                 });
+        //第一：默认初始化
+        Bmob.initialize(this, "664058c578cd8a1d81ddd3259e68973e");
     }
 
     public static MyApplication getInstance() {
