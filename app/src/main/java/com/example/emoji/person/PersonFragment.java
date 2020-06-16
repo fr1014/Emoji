@@ -13,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emoji.R;
 import com.example.emoji.base.BaseFragment;
@@ -25,6 +27,9 @@ import com.example.media.utils.ImageSelector;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +47,8 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
     private MutableLiveData<MyUser> liveData;
     private MutableLiveData<String> picLiveData;
     private StorageReference storageRef;
+    private PersonAdapter adapter;
+    private RecyclerView recyclerView;
 
     public PersonFragment() {
     }
@@ -70,6 +77,7 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
         head = view.findViewById(R.id.iv_head);
         container = view.findViewById(R.id.container);
         userName = view.findViewById(R.id.tv_name);
+        recyclerView = view.findViewById(R.id.rv_person);
 
         btLogin.setOnClickListener(this);
 //        Boolean status = UserStatusUtil.readLoginStatus(MyApplication.getInstance());
@@ -79,7 +87,11 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
         login.setVisibility(View.INVISIBLE);
         unLogin.setVisibility(View.VISIBLE);
 
-
+        String[] s = {"我的帖子","我的评论","我的收藏","我赞过的","浏览历史","帮助和反馈","推荐给好友"};
+        adapter = new PersonAdapter(getContext());
+        adapter.setData(Arrays.asList(s));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private static final String TAG = "PersonFragment";

@@ -10,13 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.emoji.data.bmob.MyUser;
 import com.example.emoji.utils.ToastUtil;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -24,11 +19,9 @@ import java.io.File;
 import java.util.Objects;
 
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
-import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * 创建时间:2020/6/8
@@ -137,6 +130,7 @@ public class PersonViewModel extends AndroidViewModel {
 //        StorageReference spaceRef = storageRef.child(path);
 //    }
 
+    //FirebaseStorage上传文件
     public void uploadFiles(StorageReference storageRef,String path){
 
 //        StorageReference imagesRef = storageRef.child("images");
@@ -165,6 +159,7 @@ public class PersonViewModel extends AndroidViewModel {
 
     }
 
+    //获取上传文件的url
     public void getDownloadUrl(StorageReference storageRef,String path){
         Uri file = Uri.fromFile(new File(path));
         storageRef.child("headFiles/"+Objects.requireNonNull(file.getLastPathSegment())).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
