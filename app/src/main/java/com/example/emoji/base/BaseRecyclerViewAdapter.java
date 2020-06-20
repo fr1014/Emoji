@@ -26,8 +26,8 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
     public static final int TYPE_FOOTER = 2;
     private View mHeaderView;  //头部视图
     private View mFooterView;  //尾部视图
-    private OnItemClickListener<T> onItemClickListener;
-    private List<T> mData = new ArrayList<>();
+    protected OnItemClickListener<T> onItemClickListener;
+    protected List<T> mData = new ArrayList<>();
 
     public void setData(List<T> data) {
         if (data == null) {
@@ -36,6 +36,7 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
         }
         mData.clear();
         mData.addAll(data);
+        notifyDataSetChanged();
     }
 
     public void clearData() {
@@ -69,8 +70,33 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
         notifyItemInserted(0);
     }
 
+    public void setHeaderView(Context context, int layoutId, View root) {
+        if (context == null && layoutId < 0) {
+            return;
+        }
+        this.mHeaderView = LayoutInflater.from(context).inflate(layoutId, (ViewGroup) root, false);
+        notifyItemInserted(0);
+    }
+
     public View getHeaderView() {
         return mHeaderView;
+    }
+
+    public void setFooterView(View footerView) {
+        this.mFooterView = footerView;
+        notifyItemInserted(getItemCount() - 1);
+    }
+
+    public void setFooterView(Context context, int layoutId,View root) {
+        if (context == null && layoutId < 0) {
+            return;
+        }
+        this.mFooterView = LayoutInflater.from(context).inflate(layoutId, (ViewGroup) root,false);
+        notifyItemInserted(getItemCount() - 1);
+    }
+
+    public View getFooterView() {
+        return mFooterView;
     }
 
     @Override
@@ -84,11 +110,19 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
         return TYPE_NORMAL;
     }
 
+    private int getRealPosition(BaseRecyclerViewHolder holder) {
+        int position = holder.getLayoutPosition();
+        return mHeaderView == null ? position : position - 1;
+    }
+
     @NonNull
     @Override
     public BaseRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (mHeaderView != null && viewType == TYPE_HEADER) {
             return new HeaderViewHolder(mHeaderView);
+        }
+        if (mFooterView != null && viewType == TYPE_FOOTER){
+            return new FooterViewHolder(mFooterView);
         }
         return onCreateRecyclerViewHolder(parent, viewType);
     }
@@ -116,11 +150,6 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
         }
     }
 
-    private int getRealPosition(BaseRecyclerViewHolder holder) {
-        int position = holder.getLayoutPosition();
-        return mHeaderView == null ? position : position - 1;
-    }
-
     public abstract BaseRecyclerViewHolder onCreateRecyclerViewHolder(ViewGroup parent, int viewType);
 
     /**
@@ -133,29 +162,37 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
 
     @Override
     public int getItemCount() {
-        return mData == null ? 0 : mData.size();
+        int count = mData.size();
+        if (mHeaderView != null) {
+            count++;
+        }
+        if (mFooterView != null) {
+            count++;
+        }
+        return count;
     }
 
-//    @Override
-//    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-//        super.onAttachedToRecyclerView(recyclerView);
-//        RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
-//        if (manager instanceof GridLayoutManager) {
-//            final GridLayoutManager gridLayoutManager = ((GridLayoutManager) manager);
-//            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//                @Override
-//                public int getSpanSize(int position) {
-//                    if (getItemViewType(position) == TYPE_HEADER) {
-//                        return gridLayoutManager.getSpanCount();
-//                    }
-//                    if (getItemViewType(position) == TYPE_FOOTER) {
-//                        return gridLayoutManager.getSpanCount();
-//                    }
-//                    return 1;
-//                }
-//            });
-//        }
-//    }
+    //重写使得GridLayoutManager中的HeaderView和FooterView可以独占一行
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
+        if (manager instanceof GridLayoutManager) {
+            final GridLayoutManager gridLayoutManager = ((GridLayoutManager) manager);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (getItemViewType(position) == TYPE_HEADER) {
+                        return gridLayoutManager.getSpanCount();
+                    }
+                    if (getItemViewType(position) == TYPE_FOOTER) {
+                        return gridLayoutManager.getSpanCount();
+                    }
+                    return 1;
+                }
+            });
+        }
+    }
 
     public static abstract class BaseRecyclerViewHolder extends RecyclerView.ViewHolder {
         public BaseRecyclerViewHolder(@NonNull View itemView) {
@@ -176,6 +213,18 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
 
         }
 
+    }
+
+    public static class FooterViewHolder extends BaseRecyclerViewHolder{
+
+        public FooterViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void findView(View v) {
+
+        }
     }
 
     /**

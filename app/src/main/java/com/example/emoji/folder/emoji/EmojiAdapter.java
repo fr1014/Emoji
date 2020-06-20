@@ -52,7 +52,7 @@ public class EmojiAdapter extends MyRecyclerViewAdapter<EmojiEntity> {
     @Override
     protected void convert(ViewHolder holder, EmojiEntity emojiEntity, int position) {
         ImageView emoji = holder.getView(R.id.iv_emoji);
-        TextView tvDelete = holder.getView(R.id.tv_del);
+        ImageView ivDel = holder.getView(R.id.iv_del);
         GlideUtils.load(emojiEntity.getBytes(), emoji);
         emoji.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,12 +65,12 @@ public class EmojiAdapter extends MyRecyclerViewAdapter<EmojiEntity> {
         emoji.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                tvDelete.setVisibility(View.VISIBLE);
+                ivDel.setVisibility(View.VISIBLE);
                 return true;
             }
         });
 
-        tvDelete.setOnClickListener(new View.OnClickListener() {
+        ivDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (viewModel != null) {

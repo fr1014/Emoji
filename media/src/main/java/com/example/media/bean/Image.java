@@ -76,6 +76,11 @@ public class Image implements Parcelable {
         this.mimeType = in.readString();
     }
 
+    //置空
+    public static void setEmpty(Image image){
+        image = null;
+    }
+
     public static final Creator<Image> CREATOR = new Creator<Image>() {
         @Override
         public Image createFromParcel(Parcel source) {

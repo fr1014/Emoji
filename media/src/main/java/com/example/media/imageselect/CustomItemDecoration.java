@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.View;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * 创建时间：2020/2/9
  * 作者：范瑞
  * 博客：https://www.jianshu.com/u/408f3c1b46a9
- *
+ * <p>
  * 默认分隔线实现类只支持布局管理器为 LinearLayoutManager
  */
 public class CustomItemDecoration extends RecyclerView.ItemDecoration {
@@ -21,7 +22,7 @@ public class CustomItemDecoration extends RecyclerView.ItemDecoration {
     private Paint mPaint;
     private int mDividerHeight;
 
-    public CustomItemDecoration(){
+    public CustomItemDecoration() {
         mPaint = new Paint();
         mPaint.setColor(Color.BLACK);   //分割线默认为黑色
         mDividerHeight = 3; //默认分割线的高度为3px
@@ -29,17 +30,20 @@ public class CustomItemDecoration extends RecyclerView.ItemDecoration {
 
     /**
      * 设置分割线的高度
+     *
      * @param dividerHeight 分割线高度
      */
-    public void setDividerHeight(int dividerHeight){
+    public void setDividerHeight(int dividerHeight) {
         this.mDividerHeight = dividerHeight;
     }
 
     /**
      * 设置分割线的颜色
+     *
      * @param color 颜色
+     *              ContextCompat.getColor(getContext(), R.color.itemDecoration)
      */
-    public void setDividerColor(int color){
+    public void setDividerColor(@ColorInt int color) {
         mPaint.setColor(color);
     }
 
@@ -75,26 +79,28 @@ public class CustomItemDecoration extends RecyclerView.ItemDecoration {
     public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.onDraw(c, parent, state);
 
+        final int left = parent.getPaddingLeft();
+        final int right = parent.getWidth() - parent.getPaddingRight();
+
         //获取子View的数量
         int childCount = parent.getChildCount();
-        //遍历每个ItemView，分别获取它们的位置信息
-        for (int i = 0; i < childCount; i++) {
-            View childView = parent.getChildAt(i);
+        //遍历每个ItemView，分别获取它们的位置信息(childCount - 1: 最后一行不画分割线)
+        for (int i = 0; i < childCount - 1; i++) {
+            final View childView = parent.getChildAt(i);
             //获取itemView的参数
-            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) childView.getLayoutParams();
+            final RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) childView.getLayoutParams();
             //获取分割线的左、顶、右、下的坐标点
-            int left = parent.getPaddingLeft();
-            int top = childView.getBottom() + layoutParams.bottomMargin;
-            int right = parent.getWidth() - parent.getPaddingRight();
-            int bottom = top + mDividerHeight;
 
+            final int top = childView.getBottom() + layoutParams.bottomMargin;
+            final int bottom = top + mDividerHeight;
             //绘制分割线
-            c.drawRect(left,top,right,bottom,mPaint);
+            c.drawRect(left, top, right, bottom, mPaint);
         }
     }
 
     /**
      * 同样是绘制内容，但是层次上是在最顶层
+     *
      * @param c
      * @param parent
      * @param state

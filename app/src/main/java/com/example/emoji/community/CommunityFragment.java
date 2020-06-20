@@ -4,36 +4,32 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.emoji.R;
-import com.example.emoji.base.BaseFragment;
-import com.example.emoji.data.bmob.MyUser;
-import com.example.emoji.utils.ToastUtil;
+import com.example.emoji.base.BaseBindingFragment;
+import com.example.emoji.community.upload.CommunityActivity;
+import com.example.emoji.data.bmob.Post;
+import com.example.emoji.databinding.FragmentCommunityBinding;
+import com.example.media.imageselect.CustomItemDecoration;
 
-import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import de.hdodenhof.circleimageview.CircleImageView;
+public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBinding, CommunityViewModel> implements View.OnClickListener {
 
-public class CommunityFragment extends BaseFragment<CommunityViewModel> {
-
+    private CommunityAdapter adapter;
+    private MutableLiveData<List<Post>> queryAllPostLiveData;
 
     public CommunityFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static CommunityFragment getInstance() {
         CommunityFragment fragment = new CommunityFragment();
         return fragment;
@@ -42,21 +38,29 @@ public class CommunityFragment extends BaseFragment<CommunityViewModel> {
     @Override
     protected void initViewModel() {
         viewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(CommunityViewModel.class);
+        queryAllPostLiveData = viewModel.getQueryAllPostLiveData();
     }
 
     @Override
-    protected int getLayoutRes() {
-        return R.layout.fragment_community;
+    protected FragmentCommunityBinding getViewBinding() {
+        return FragmentCommunityBinding.inflate(getLayoutInflater());
     }
 
     @Override
     protected void initView(View view) {
-
+        mBinding.ivUpload.setOnClickListener(this);
+        mBinding.rvCommunity.setLayoutManager(new LinearLayoutManager(getContext()));
+        CustomItemDecoration itemDecoration = new CustomItemDecoration();
+        itemDecoration.setDividerColor(ContextCompat.getColor(getContext(), R.color.itemDecoration));
+        itemDecoration.setDividerHeight(12);
+        mBinding.rvCommunity.addItemDecoration(itemDecoration);
+        adapter = new CommunityAdapter(getContext());
+        mBinding.rvCommunity.setAdapter(adapter);
     }
 
     @Override
     protected void initData() {
-
+        queryAllPostLiveData.observe(this, posts -> adapter.setData(posts));
     }
 
     @Override
@@ -64,4 +68,15 @@ public class CommunityFragment extends BaseFragment<CommunityViewModel> {
         super.onViewCreated(view, savedInstanceState);
 
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_upload:
+                startActivity(this, CommunityActivity.class);
+                break;
+        }
+    }
+
+
 }

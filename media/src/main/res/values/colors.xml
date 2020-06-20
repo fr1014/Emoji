@@ -6,4 +6,6 @@
     <color name="dividerColor">#B4A8A8</color>
     <color name="alpha_black">#48312424</color>
     <color name="right">#F44336</color>
+    <!--rv分割线-->
+    <color name="itemDecoration">#BDEBF1</color>
 </resources>

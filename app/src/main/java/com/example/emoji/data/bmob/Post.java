@@ -1,7 +1,10 @@
 package com.example.emoji.data.bmob;
 
+import java.util.List;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * 创建时间:2020/6/7
@@ -11,7 +14,12 @@ import cn.bmob.v3.datatype.BmobFile;
 public class Post extends BmobObject {
     private String content; //帖子内容
     private MyUser author; //帖子的发布者，1对1的关系
-    private BmobFile image; //帖子图片
+    private List<String> images; //帖子图片
+
+    /**
+     * 一对多关系：用于存储喜欢该帖子的所有用户
+     */
+    private BmobRelation likes;
 
     public String getContent() {
         return content;
@@ -29,11 +37,29 @@ public class Post extends BmobObject {
         this.author = author;
     }
 
-    public BmobFile getImage() {
-        return image;
+    public List<String> getImages() {
+        return images;
     }
 
-    public void setImage(BmobFile image) {
-        this.image = image;
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public BmobRelation getLikes() {
+        return likes;
+    }
+
+    public void setLikes(BmobRelation likes) {
+        this.likes = likes;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "content='" + content + '\'' +
+                ", author=" + author +
+                ", images=" + images +
+                ", likes=" + likes +
+                '}';
     }
 }

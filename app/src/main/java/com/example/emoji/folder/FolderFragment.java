@@ -110,6 +110,7 @@ public class FolderFragment extends BaseFragment<FolderViewModel> {
                 if (((com.example.emoji.base.BaseFragment) fragment).onBackPressed()) {
                     /*在Fragment中处理返回事件*/
                     Log.d(TAG, "----onBackPressed: ");
+                    motionView.setVisibility(View.VISIBLE);
                     return true;
                 }
             }
