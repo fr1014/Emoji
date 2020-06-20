@@ -138,6 +138,7 @@ public class CommunityViewModel extends AndroidViewModel {
                 @Override
                 public void done(String s, BmobException e) {
                     if (e == null) {
+                        stringMutableLiveData.postValue("发帖成功");
                         ToastUtil.toastShort("发布帖子成功！！！");
                     } else {
                         Log.d(TAG, "----done: savePose: " + e.toString());

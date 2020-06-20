@@ -15,6 +15,7 @@ import com.example.emoji.R;
 import com.example.emoji.base.BaseBindingActivity;
 import com.example.emoji.community.CommunityViewModel;
 import com.example.emoji.databinding.ActivityCommunityBinding;
+import com.example.emoji.listener.CustomClickListener;
 import com.example.emoji.utils.ToastUtil;
 import com.example.media.bean.Image;
 import com.example.media.imageselect.images.ImageSelectActivity;
@@ -25,6 +26,8 @@ import com.google.firebase.storage.StorageReference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.v3.BmobUser;
 
 public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBinding, CommunityViewModel> implements View.OnClickListener {
 
@@ -66,14 +69,15 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
 
         mBinding.tvUpload.setOnClickListener(this);
 
-        ivAddEmoji.setOnClickListener(new View.OnClickListener() {
+        ivAddEmoji.setOnClickListener(new CustomClickListener(2000L) {
             @Override
-            public void onClick(View v) {
-                ToastUtil.toastShort("点击");
-                ImageSelectActivity.startActivity(activity.get(), 1, 9 - allImages.size());
+            protected void onSingleClick(View view) {
+                Log.d(TAG, "----onClick: " + "开始上传");
+                for (Image image : allImages) {
+                    viewModel.uploadFiles(storageRef, image.getPath());
+                }
             }
         });
-
     }
 
     @Override
@@ -100,12 +104,17 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
         //图片上传成功后返回的url
         stringMutableLiveData.observe(this, new Observer<String>() {
             @Override
-            public void onChanged(String url) {
-                imagesUrl.add(url);
-                if (imagesUrl.size() == allImages.size()) {
-                    String content = mBinding.etContent.getText().toString();
-                    viewModel.savePost(content, imagesUrl);
+            public void onChanged(String s) {
+                if (s.equals("发帖成功")) {
+                    activity.get().finish();
+                } else {
+                    imagesUrl.add(s);
+                    if (imagesUrl.size() == allImages.size()) {
+                        String content = mBinding.etContent.getText().toString();
+                        viewModel.savePost(content, imagesUrl);
+                    }
                 }
+
             }
         });
     }
@@ -124,21 +133,19 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_upload:
-                Log.d(TAG, "----onClick: "+"开始上传");
-                for (Image image : allImages) {
-                    viewModel.uploadFiles(storageRef, image.getPath());
-                }
-                break;
-        }
-    }
-
     //创建FirebaseStorage引用
     public void createReference() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_emoji:
+                ToastUtil.toastShort("选择要上传的图片");
+                ImageSelectActivity.startActivity(activity.get(), 1, 9 - allImages.size());
+                break;
+        }
     }
 }

@@ -23,8 +23,8 @@ public class GlideUtils {
         if (!StringUtils.isEmpty(url)) {
             Glide.with(view.getContext())
                     .load(url)
-                    .error(R.drawable.iv_head)
-                    .placeholder(R.drawable.iv_head)
+                    .error(R.drawable.ic_error)
+                    .placeholder(R.drawable.ic_loading)
                     .into(view);
         }
     }

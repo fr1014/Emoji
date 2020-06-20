@@ -172,7 +172,7 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
         return count;
     }
 
-    //重写使得GridLayoutManager中的HeaderView和FooterView可以独占一行
+    //使得GridLayoutManager中的HeaderView和FooterView可以独占一行
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);

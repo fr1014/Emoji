@@ -9,17 +9,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.View;
 
 import com.example.emoji.R;
 import com.example.emoji.base.BaseBindingFragment;
 import com.example.emoji.community.upload.CommunityActivity;
+import com.example.emoji.data.bmob.MyUser;
 import com.example.emoji.data.bmob.Post;
 import com.example.emoji.databinding.FragmentCommunityBinding;
+import com.example.emoji.utils.ToastUtil;
 import com.example.media.imageselect.CustomItemDecoration;
 
 import java.util.List;
 import java.util.Objects;
+
+import cn.bmob.v3.BmobUser;
 
 public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBinding, CommunityViewModel> implements View.OnClickListener {
 
@@ -73,7 +78,12 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_upload:
-                startActivity(this, CommunityActivity.class);
+                if (BmobUser.isLogin()) {
+                    startActivity(this, CommunityActivity.class);
+                } else {
+                    ToastUtil.toastShort("请先登录!!!");
+                }
+
                 break;
         }
     }
