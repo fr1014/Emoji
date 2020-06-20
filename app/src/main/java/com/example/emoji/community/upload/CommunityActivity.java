@@ -66,10 +66,9 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
         adapter.setFooterView(view);
         adapter.setViewModel(viewModel);
         mBinding.rvEmoji.setAdapter(adapter);
+        ivAddEmoji.setOnClickListener(this);
 
-        mBinding.tvUpload.setOnClickListener(this);
-
-        ivAddEmoji.setOnClickListener(new CustomClickListener(2000L) {
+        mBinding.tvUpload.setOnClickListener(new CustomClickListener(2000L) {
             @Override
             protected void onSingleClick(View view) {
                 Log.d(TAG, "----onClick: " + "开始上传");
