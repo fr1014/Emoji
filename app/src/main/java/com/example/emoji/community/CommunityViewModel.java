@@ -60,11 +60,15 @@ public class CommunityViewModel extends AndroidViewModel {
 
     public MutableLiveData<List<Post>> getQueryAllPostLiveData() {
         if (queryAllPostLiveData == null){
+            queryAllPostLiveData = new MutableLiveData<>();
             //查询所有帖子
             queryAllPost();
-            queryAllPostLiveData = new MutableLiveData<>();
         }
         return queryAllPostLiveData;
+    }
+
+    public List<Post> getPostVale(){
+        return getQueryAllPostLiveData().getValue();
     }
 
     //FirebaseStorage上传文件

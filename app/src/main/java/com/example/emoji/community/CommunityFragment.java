@@ -16,12 +16,10 @@ import com.example.emoji.MyApplication;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseBindingFragment;
 import com.example.emoji.community.upload.CommunityActivity;
-import com.example.emoji.data.bmob.Post;
 import com.example.emoji.databinding.FragmentCommunityBinding;
 import com.example.emoji.utils.ToastUtil;
 import com.example.media.imageselect.CustomItemDecoration;
 
-import java.util.List;
 import java.util.Objects;
 
 import cn.bmob.v3.BmobUser;
@@ -29,7 +27,6 @@ import cn.bmob.v3.BmobUser;
 public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBinding, CommunityViewModel> implements View.OnClickListener {
 
     private CommunityAdapter adapter;
-    private MutableLiveData<List<Post>> queryAllPostLiveData;
 
     public CommunityFragment() {
         // Required empty public constructor
@@ -43,7 +40,6 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
     @Override
     protected void initViewModel() {
         viewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(CommunityViewModel.class);
-        queryAllPostLiveData = viewModel.getQueryAllPostLiveData();
     }
 
     @Override
@@ -60,15 +56,7 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
         itemDecoration.setDividerHeight(12);
         mBinding.rvCommunity.addItemDecoration(itemDecoration);
         adapter = new CommunityAdapter(getContext());
-        List<Post> data = queryAllPostLiveData.getValue();
-        if (data != null) {
-            for (Post post : data) {
-                Log.d(TAG, "----initView: " + post.toString());
-            }
-            adapter.setData(data);
-        }else {
-            Log.d(TAG, "----initView: "+"没有数据");
-        }
+//        adapter.setData(data);
         mBinding.rvCommunity.setAdapter(adapter);
     }
 
@@ -76,7 +64,8 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
 
     @Override
     protected void initData() {
-        queryAllPostLiveData.observe(this, posts -> {
+
+        viewModel.getQueryAllPostLiveData().observe(this, posts -> {
             Log.d(TAG, "----initData: " + posts.size());
             adapter.setData(posts);
         });

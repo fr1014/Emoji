@@ -1,5 +1,8 @@
 package com.example.emoji;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.IntegerRes;
+import androidx.annotation.LayoutRes;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -15,8 +18,12 @@ public class NavigationViewModel extends ViewModel {
     public MutableLiveData<Integer> getFragmentResLiveData() {
         if (fragmentResLiveData == null){
             fragmentResLiveData = new MutableLiveData<>();
-            fragmentResLiveData.postValue(R.id.navigation_home);
+            select(R.id.navigation_home);
         }
         return fragmentResLiveData;
+    }
+
+    public void select(@IdRes int layoutRes) {
+        fragmentResLiveData.setValue(layoutRes);
     }
 }

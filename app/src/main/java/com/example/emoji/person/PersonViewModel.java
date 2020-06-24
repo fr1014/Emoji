@@ -85,6 +85,10 @@ public class PersonViewModel extends AndroidViewModel {
         return BmobUser.getCurrentUser(MyUser.class);
     }
 
+    public void updateUser(MyUser user){
+        getUserMutableLiveData().setValue(user);
+    }
+
     private static final String TAG = "PersonViewModel";
     //注册
     public void register(MyUser mu){

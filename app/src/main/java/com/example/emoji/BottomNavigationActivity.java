@@ -117,6 +117,6 @@ public class BottomNavigationActivity extends BaseBindingActivity<ActivityBottom
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.getFragmentResLiveData().postValue(fragmentRes);
+        viewModel.select(fragmentRes);
     }
 }

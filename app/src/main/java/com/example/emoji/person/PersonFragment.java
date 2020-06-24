@@ -41,8 +41,8 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
     private TextView userName;
     private TextView praised; //获赞
     private TextView attention; //关注
-    private MutableLiveData<MyUser> liveData;
-    private MutableLiveData<String> picLiveData;
+//    private MutableLiveData<MyUser> liveData;
+//    private MutableLiveData<String> picLiveData;
     private StorageReference storageRef;
     private PersonAdapter adapter;
     private RecyclerView recyclerView;
@@ -57,8 +57,8 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
     @Override
     protected void initViewModel() {
         viewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(PersonViewModel.class);
-        liveData = viewModel.getUserMutableLiveData();
-        picLiveData = viewModel.getStringMutableLiveData();
+//        liveData = viewModel.getUserMutableLiveData();
+//        picLiveData = viewModel.getStringMutableLiveData();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
         //创建Firebase的引用用于文件上传
         createReference();
 
-        liveData.observe(this, user -> {
+        viewModel.getUserMutableLiveData().observe(this, user -> {
             login.setVisibility(View.VISIBLE);
             unLogin.setVisibility(View.INVISIBLE);
             Log.d(TAG, "----onChanged: " + user.toString());
@@ -109,7 +109,7 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
             userName.setText(user.getUsername());
         });
 
-        picLiveData.observe(this, headPicUrl -> {
+        viewModel.getStringMutableLiveData().observe(this, headPicUrl -> {
             MyUser bmobUser = viewModel.getUser();
             if (!bmobUser.getHeadPicUrl().equals(headPicUrl)) {
                 MyUser newUser = new MyUser();
@@ -138,7 +138,7 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
 
         MyUser user = viewModel.getUser();
         if (user != null) {
-            liveData.postValue(user);
+            viewModel.updateUser(user);
         }
     }
 

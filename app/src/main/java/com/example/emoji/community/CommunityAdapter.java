@@ -15,6 +15,7 @@ import com.example.emoji.R;
 import com.example.emoji.base.BaseRecyclerViewAdapter;
 import com.example.emoji.data.bmob.Post;
 import com.example.emoji.utils.GlideUtils;
+import com.example.emoji.utils.ToastUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -23,7 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * 作者:fr
  * 邮箱:1546352238@qq.com
  */
-public class CommunityAdapter extends BaseRecyclerViewAdapter<Post> {
+public class CommunityAdapter extends BaseRecyclerViewAdapter<Post> implements View.OnClickListener{
 
     private Context context;
 
@@ -44,12 +45,46 @@ public class CommunityAdapter extends BaseRecyclerViewAdapter<Post> {
         communityViewHolder.name.setText(data.getAuthor().getUsername());
         communityViewHolder.content.setText(data.getContent());
 
-        communityViewHolder.rvEmoji.setLayoutManager(new GridLayoutManager(context,3));
-        CommunityEmojiAdapter adapter = new CommunityEmojiAdapter(context);
+        initRvEmoji(holder, data, communityViewHolder);
+    }
 
-        adapter.setFooterView(context,R.layout.item_community_footer,holder.itemView.getRootView());
+    //初始化rvEmoji
+    private void initRvEmoji(BaseRecyclerViewHolder holder, Post data, CommunityViewHolder communityViewHolder) {
+        communityViewHolder.rvEmoji.setLayoutManager(new GridLayoutManager(context,3));
+
+        View footerView = LayoutInflater.from(context).inflate(R.layout.item_community_footer, (ViewGroup) holder.itemView.getRootView(),false);
+        CommunityEmojiAdapter adapter = new CommunityEmojiAdapter(context);
+        adapter.setFooterView(footerView);
         communityViewHolder.rvEmoji.setAdapter(adapter);
         adapter.setData(data.getImages());
+
+        itemOnClick(footerView);
+    }
+
+    //处理footerView上的点击事件
+    private void itemOnClick(View footerView) {
+        footerView.findViewById(R.id.iv_share).setOnClickListener(this);
+        footerView.findViewById(R.id.iv_comment).setOnClickListener(this);
+        footerView.findViewById(R.id.iv_good).setOnClickListener(this);
+        footerView.findViewById(R.id.iv_bad).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.iv_share:
+                ToastUtil.toastShort("分享");
+                break;
+            case R.id.iv_comment:
+                ToastUtil.toastShort("评论");
+                break;
+            case R.id.iv_good:
+                ToastUtil.toastShort("点赞");
+                break;
+            case R.id.iv_bad:
+                ToastUtil.toastShort("差评");
+                break;
+        }
     }
 
     static class CommunityViewHolder extends BaseRecyclerViewHolder{
