@@ -38,6 +38,7 @@ public abstract class BaseBindingFragment<VB extends ViewBinding,VM extends View
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "----onViewCreated: ");
         initView(view);
         initData();
     }

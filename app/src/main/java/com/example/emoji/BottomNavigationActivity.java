@@ -1,48 +1,58 @@
 package com.example.emoji;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
-import android.os.Bundle;
 import android.util.Log;
 
+import com.example.emoji.base.BaseBindingActivity;
 import com.example.emoji.community.CommunityFragment;
+import com.example.emoji.databinding.ActivityBottomNavigationBinding;
 import com.example.emoji.folder.FolderFragment;
 import com.example.emoji.person.PersonFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.permission.Permission;
 import com.permission.PermissionListener;
 import com.permission.PermissionUtils;
 
 import java.util.List;
 
-public class BottomNavigationActivity extends AppCompatActivity {
-    private BottomNavigationView mNavigationView;
+public class BottomNavigationActivity extends BaseBindingActivity<ActivityBottomNavigationBinding, NavigationViewModel> {
     private Fragment mFragments[];
+    private int fragmentRes;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bottom_navigation);
+    public void initViewModel() {
+        viewModel = new ViewModelProvider(this).get(NavigationViewModel.class);
+    }
+
+    @Override
+    protected ActivityBottomNavigationBinding getViewBinding() {
+        return ActivityBottomNavigationBinding.inflate(getLayoutInflater());
+    }
+
+    @Override
+    protected void initView() {
+        initPermission();
 
         mFragments = new Fragment[]{FolderFragment.getInstance(), CommunityFragment.getInstance(), PersonFragment.getInstance()};
 
-        initView();
-        initPermission();
-    }
-
-    private void initView() {
-        mNavigationView =findViewById(R.id.navigation);
-
-        mNavigationView.setOnNavigationItemSelectedListener(item -> {
-            onTabItemSelected(item.getItemId());
+        mBinding.navigation.setOnNavigationItemSelectedListener(item -> {
+            fragmentRes = item.getItemId();
+            onTabItemSelected(fragmentRes);
             return true;
         });
 
-        // 由于第一次进来没有回调onNavigationItemSelected，因此需要手动调用一下切换状态的方法
-        onTabItemSelected(R.id.navigation_home);
+        viewModel.getFragmentResLiveData().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer res) {
+                onTabItemSelected(res);
+            }
+        });
+//        // 由于第一次进来没有回调onNavigationItemSelected，因此需要手动调用一下切换状态的方法
+//        onTabItemSelected(R.id.navigation_home);
     }
 
     private void onTabItemSelected(int id) {
@@ -86,6 +96,7 @@ public class BottomNavigationActivity extends AppCompatActivity {
     }
 
     private static final String TAG = "BottomNavigationActivit";
+
     @Override
     public void onBackPressed() {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
@@ -101,5 +112,11 @@ public class BottomNavigationActivity extends AppCompatActivity {
             }
         }
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.getFragmentResLiveData().postValue(fragmentRes);
     }
 }

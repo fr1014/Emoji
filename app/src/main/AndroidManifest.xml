@@ -22,6 +22,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="q">
+        <!--android:windowSoftInputMode="adjustPan|stateHidden" 解决软键盘导致的界面跳动-->
         <activity
             android:name=".community.upload.CommunityActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />

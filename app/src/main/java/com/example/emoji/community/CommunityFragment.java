@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
+import com.example.emoji.MyApplication;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseBindingFragment;
 import com.example.emoji.community.upload.CommunityActivity;
-import com.example.emoji.data.bmob.MyUser;
 import com.example.emoji.data.bmob.Post;
 import com.example.emoji.databinding.FragmentCommunityBinding;
 import com.example.emoji.utils.ToastUtil;
@@ -56,22 +56,30 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
         mBinding.ivUpload.setOnClickListener(this);
         mBinding.rvCommunity.setLayoutManager(new LinearLayoutManager(getContext()));
         CustomItemDecoration itemDecoration = new CustomItemDecoration();
-        itemDecoration.setDividerColor(ContextCompat.getColor(getContext(), R.color.itemDecoration));
+        itemDecoration.setDividerColor(ContextCompat.getColor(MyApplication.getInstance(), R.color.itemDecoration));
         itemDecoration.setDividerHeight(12);
         mBinding.rvCommunity.addItemDecoration(itemDecoration);
         adapter = new CommunityAdapter(getContext());
+        List<Post> data = queryAllPostLiveData.getValue();
+        if (data != null) {
+            for (Post post : data) {
+                Log.d(TAG, "----initView: " + post.toString());
+            }
+            adapter.setData(data);
+        }else {
+            Log.d(TAG, "----initView: "+"没有数据");
+        }
         mBinding.rvCommunity.setAdapter(adapter);
     }
 
+    private static final String TAG = "CommunityFragment";
+
     @Override
     protected void initData() {
-        queryAllPostLiveData.observe(this, posts -> adapter.setData(posts));
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+        queryAllPostLiveData.observe(this, posts -> {
+            Log.d(TAG, "----initData: " + posts.size());
+            adapter.setData(posts);
+        });
     }
 
     @Override

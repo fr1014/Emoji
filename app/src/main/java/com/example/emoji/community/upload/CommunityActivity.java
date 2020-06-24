@@ -27,8 +27,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobUser;
-
 public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBinding, CommunityViewModel> implements View.OnClickListener {
 
     private UploadEmojiAdapter adapter;

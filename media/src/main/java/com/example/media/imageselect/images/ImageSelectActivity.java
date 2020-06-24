@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -97,7 +98,7 @@ public class ImageSelectActivity extends BaseActivity implements View.OnClickLis
         rvFolder.setLayoutManager(linearLayoutManager);
         //rv分割线
         CustomItemDecoration itemDecoration = new CustomItemDecoration();
-        itemDecoration.setDividerColor(R.color.dividerColor);
+        itemDecoration.setDividerColor(ContextCompat.getColor(this,R.color.dividerColor));
         rvFolder.addItemDecoration(itemDecoration);
 
         rvFolder.setAdapter(mFolderAdapter);
