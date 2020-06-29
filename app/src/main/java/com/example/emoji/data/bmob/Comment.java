@@ -7,17 +7,27 @@ import cn.bmob.v3.BmobObject;
  * 作者:fr
  * 邮箱:1546352238@qq.com
  */
-class Comment extends BmobObject {
-    private String comment; //评论内容
+public class Comment extends BmobObject {
+    private String content; //评论内容
     private MyUser user;////评论的用户，Pointer类型，一对一关系
     private Post post; //所评论的帖子，这里体现的是一对多的关系，一个评论只能属于一个帖子
 
-    public String getComment() {
-        return comment;
+    public Comment(){
+
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public Comment(String content, MyUser user, Post post){
+        this.content = content;
+        this.user = user;
+        this.post = post;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public MyUser getUser() {

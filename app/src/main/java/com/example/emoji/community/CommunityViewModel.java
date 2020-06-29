@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.emoji.data.bmob.MyUser;
 import com.example.emoji.data.bmob.Post;
@@ -33,16 +34,11 @@ import cn.bmob.v3.listener.SaveListener;
  * 作者:fr
  * 邮箱:1546352238@qq.com
  */
-public class CommunityViewModel extends AndroidViewModel {
+public class CommunityViewModel extends ViewModel {
     private Application application;
     private MutableLiveData<List<Image>> upLoadImagesLiveData;
     private MutableLiveData<String> stringMutableLiveData;
     private MutableLiveData<List<Post>> queryAllPostLiveData;
-
-    public CommunityViewModel(@NonNull Application application) {
-        super(application);
-        this.application = application;
-    }
 
     public MutableLiveData<List<Image>> getUpLoadImagesLiveData() {
         if (upLoadImagesLiveData == null) {
@@ -161,13 +157,13 @@ public class CommunityViewModel extends AndroidViewModel {
         query.include("author");
         query.findObjects(new FindListener<Post>() {
             @Override
-            public void done(List<Post> object, BmobException e) {
+            public void done(List<Post> posts, BmobException e) {
                 if (e == null) {
                     ToastUtil.toastShort("查询成功");
-                    queryAllPostLiveData.postValue(object);
-                    for (Post post:object){
-                        Log.d(TAG, "----done: "+post.toString());
-                    }
+                    queryAllPostLiveData.postValue(posts);
+//                    for (Post post:posts){
+//                        Log.d(TAG, "----done: "+post.toString());
+//                    }
                 } else {
                     Log.d(TAG, "----done: query:" + e.toString());
                 }

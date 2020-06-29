@@ -1,6 +1,8 @@
 package com.example.emoji.community;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emoji.R;
 import com.example.emoji.base.BaseRecyclerViewAdapter;
+import com.example.emoji.community.comment.CommentActivity;
 import com.example.emoji.data.bmob.Post;
 import com.example.emoji.utils.GlideUtils;
 import com.example.emoji.utils.ToastUtil;
@@ -24,8 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * 作者:fr
  * 邮箱:1546352238@qq.com
  */
-public class CommunityAdapter extends BaseRecyclerViewAdapter<Post> implements View.OnClickListener{
-
+public class CommunityAdapter extends BaseRecyclerViewAdapter<Post> {
     private Context context;
 
     public CommunityAdapter(Context context) {
@@ -34,14 +36,14 @@ public class CommunityAdapter extends BaseRecyclerViewAdapter<Post> implements V
 
     @Override
     public BaseRecyclerViewHolder onCreateRecyclerViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_community,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_community, parent, false);
         return new CommunityViewHolder(view);
     }
 
     @Override
     protected void bindData(BaseRecyclerViewHolder holder, Post data) {
         CommunityViewHolder communityViewHolder = (CommunityViewHolder) holder;
-        GlideUtils.load(communityViewHolder.headPic,data.getAuthor().getHeadPicUrl());
+        GlideUtils.load(communityViewHolder.headPic, data.getAuthor().getHeadPicUrl());
         communityViewHolder.name.setText(data.getAuthor().getUsername());
         communityViewHolder.content.setText(data.getContent());
 
@@ -50,48 +52,47 @@ public class CommunityAdapter extends BaseRecyclerViewAdapter<Post> implements V
 
     //初始化rvEmoji
     private void initRvEmoji(BaseRecyclerViewHolder holder, Post data, CommunityViewHolder communityViewHolder) {
-        communityViewHolder.rvEmoji.setLayoutManager(new GridLayoutManager(context,3));
+        communityViewHolder.rvEmoji.setLayoutManager(new GridLayoutManager(context, 3));
 
-        View footerView = LayoutInflater.from(context).inflate(R.layout.item_community_footer, (ViewGroup) holder.itemView.getRootView(),false);
+        View footerView = LayoutInflater.from(context).inflate(R.layout.item_community_footer, (ViewGroup) holder.itemView.getRootView(), false);
         CommunityEmojiAdapter adapter = new CommunityEmojiAdapter(context);
         adapter.setFooterView(footerView);
         communityViewHolder.rvEmoji.setAdapter(adapter);
         adapter.setData(data.getImages());
 
-        itemOnClick(footerView);
+        itemOnClick(footerView, data);
     }
 
     //处理footerView上的点击事件
-    private void itemOnClick(View footerView) {
-        footerView.findViewById(R.id.iv_share).setOnClickListener(this);
-        footerView.findViewById(R.id.iv_comment).setOnClickListener(this);
-        footerView.findViewById(R.id.iv_good).setOnClickListener(this);
-        footerView.findViewById(R.id.iv_bad).setOnClickListener(this);
+    private void itemOnClick(View footerView, Post data) {
+        footerView.findViewById(R.id.iv_share).setOnClickListener(v -> {
+            ToastUtil.toastShort("分享");
+        });
+
+        footerView.findViewById(R.id.iv_comment).setOnClickListener(v -> {
+            Intent intent = new Intent(context, CommentActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("Post", data);
+            bundle.putString("id",data.getObjectId());
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        });
+
+        footerView.findViewById(R.id.iv_good).setOnClickListener(v -> {
+            ToastUtil.toastShort("点赞");
+        });
+
+        footerView.findViewById(R.id.iv_bad).setOnClickListener(v -> {
+            ToastUtil.toastShort("差评");
+        });
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.iv_share:
-                ToastUtil.toastShort("分享");
-                break;
-            case R.id.iv_comment:
-                ToastUtil.toastShort("评论");
-                break;
-            case R.id.iv_good:
-                ToastUtil.toastShort("点赞");
-                break;
-            case R.id.iv_bad:
-                ToastUtil.toastShort("差评");
-                break;
-        }
-    }
-
-    static class CommunityViewHolder extends BaseRecyclerViewHolder{
+    static class CommunityViewHolder extends BaseRecyclerViewHolder {
         private CircleImageView headPic;
         private TextView name;
         private TextView content;
         private RecyclerView rvEmoji;
+
         public CommunityViewHolder(@NonNull View itemView) {
             super(itemView);
         }
@@ -106,27 +107,28 @@ public class CommunityAdapter extends BaseRecyclerViewAdapter<Post> implements V
     }
 }
 
-class CommunityEmojiAdapter extends BaseRecyclerViewAdapter<String>{
+class CommunityEmojiAdapter extends BaseRecyclerViewAdapter<String> {
     private Context context;
 
-    public CommunityEmojiAdapter(Context context){
+    public CommunityEmojiAdapter(Context context) {
         this.context = context;
     }
 
     @Override
     public BaseRecyclerViewHolder onCreateRecyclerViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_emoji,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_emoji, parent, false);
         return new EmojiViewHolder(view);
     }
 
     @Override
     protected void bindData(BaseRecyclerViewHolder holder, String data) {
         EmojiViewHolder emojiViewHolder = (EmojiViewHolder) holder;
-        GlideUtils.load(emojiViewHolder.emoji,data);
+        GlideUtils.load(emojiViewHolder.emoji, data);
     }
 
-    static class EmojiViewHolder extends BaseRecyclerViewHolder{
+    static class EmojiViewHolder extends BaseRecyclerViewHolder {
         private ImageView emoji;
+
         public EmojiViewHolder(@NonNull View itemView) {
             super(itemView);
         }

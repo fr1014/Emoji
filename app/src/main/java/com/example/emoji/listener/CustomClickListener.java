@@ -2,6 +2,8 @@ package com.example.emoji.listener;
 
 import android.view.View;
 
+import com.example.emoji.utils.ToastUtil;
+
 /**
  * 创建时间:2020/6/20
  * 作者:fr
@@ -28,8 +30,9 @@ public abstract class CustomClickListener implements View.OnClickListener{
             onSingleClick(v);
             mLastClickTime = nowTime;
         }else {
+            ToastUtil.toastShort("不要连续点击!!!");
             //快速点击事件
-            onFastClick(v);
+//            onFastClick(v);
         }
     }
 

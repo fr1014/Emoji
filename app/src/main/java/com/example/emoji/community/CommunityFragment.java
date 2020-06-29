@@ -16,6 +16,7 @@ import com.example.emoji.MyApplication;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseBindingFragment;
 import com.example.emoji.community.upload.CommunityActivity;
+import com.example.emoji.data.bmob.Post;
 import com.example.emoji.databinding.FragmentCommunityBinding;
 import com.example.emoji.utils.ToastUtil;
 import com.example.media.imageselect.CustomItemDecoration;
@@ -50,6 +51,11 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
     @Override
     protected void initView(View view) {
         mBinding.ivUpload.setOnClickListener(this);
+
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
         mBinding.rvCommunity.setLayoutManager(new LinearLayoutManager(getContext()));
         CustomItemDecoration itemDecoration = new CustomItemDecoration();
         itemDecoration.setDividerColor(ContextCompat.getColor(MyApplication.getInstance(), R.color.itemDecoration));
@@ -68,6 +74,9 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
         viewModel.getQueryAllPostLiveData().observe(this, posts -> {
             Log.d(TAG, "----initData: " + posts.size());
             adapter.setData(posts);
+//            for (Post post:posts){
+//                Log.d(TAG, "----initData: "+post.getObjectId());
+//            }
         });
     }
 
@@ -80,7 +89,6 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
                 } else {
                     ToastUtil.toastShort("请先登录!!!");
                 }
-
                 break;
         }
     }

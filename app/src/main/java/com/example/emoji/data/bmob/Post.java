@@ -1,5 +1,8 @@
 package com.example.emoji.data.bmob;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 import cn.bmob.v3.BmobObject;
@@ -11,7 +14,7 @@ import cn.bmob.v3.datatype.BmobRelation;
  * 作者:fr
  * 邮箱:1546352238@qq.com
  */
-public class Post extends BmobObject {
+public class Post extends BmobObject implements Parcelable {
     private String content; //帖子内容
     private MyUser author; //帖子的发布者，1对1的关系
     private List<String> images; //帖子图片
@@ -54,9 +57,44 @@ public class Post extends BmobObject {
     }
 
     @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.content);
+        dest.writeSerializable(this.author);
+        dest.writeStringList(this.images);
+        dest.writeSerializable(this.likes);
+    }
+
+    public Post() {
+    }
+
+    protected Post(Parcel in) {
+        this.content = in.readString();
+        this.author = (MyUser) in.readSerializable();
+        this.images = in.createStringArrayList();
+        this.likes = (BmobRelation) in.readSerializable();
+    }
+
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+        @Override
+        public Post createFromParcel(Parcel source) {
+            return new Post(source);
+        }
+
+        @Override
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
+
+    @Override
     public String toString() {
         return "Post{" +
-                "content='" + content + '\'' +
+                ", content='" + content + '\'' +
                 ", author=" + author +
                 ", images=" + images +
                 ", likes=" + likes +

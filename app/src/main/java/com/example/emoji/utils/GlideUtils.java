@@ -25,6 +25,7 @@ public class GlideUtils {
                     .load(url)
                     .error(R.drawable.ic_error)
                     .placeholder(R.drawable.ic_loading)
+                    .centerCrop()
                     .into(view);
         }
     }
