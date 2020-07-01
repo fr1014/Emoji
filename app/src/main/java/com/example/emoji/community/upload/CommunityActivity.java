@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseBindingActivity;
 import com.example.emoji.community.CommunityViewModel;
+import com.example.emoji.community.UploadViewModel;
 import com.example.emoji.databinding.ActivityCommunityBinding;
 import com.example.emoji.listener.CustomClickListener;
 import com.example.emoji.utils.ToastUtil;
@@ -29,14 +30,13 @@ import java.util.List;
 
 public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBinding, CommunityViewModel> implements View.OnClickListener {
 
+    private UploadViewModel uploadViewModel;
     private UploadEmojiAdapter adapter;
     private ImageView ivAddEmoji;
     private List<Image> allImages = new ArrayList<>();  //将要上传的图片
     private MutableLiveData<List<Image>> upLoadImagesLiveData;
     private MutableLiveData<String> stringMutableLiveData;
     private WeakReference<CommunityActivity> activity = new WeakReference<CommunityActivity>(this);
-
-    private StorageReference storageRef;
     //用户上传的帖子图片返回的url集合
     List<String> imagesUrl = new ArrayList<>();
 
@@ -50,7 +50,8 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
     @Override
     public void initViewModel() {
         viewModel = new ViewModelProvider(this).get(CommunityViewModel.class);
-        upLoadImagesLiveData = viewModel.getUpLoadImagesLiveData();
+        uploadViewModel = new ViewModelProvider(this).get(UploadViewModel.class);
+        upLoadImagesLiveData = uploadViewModel.getUpLoadImagesLiveData();
         stringMutableLiveData = viewModel.getStringMutableLiveData();
     }
 
@@ -62,7 +63,7 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
         adapter = new UploadEmojiAdapter(this);
         adapter.setData(null);
         adapter.setFooterView(view);
-        adapter.setViewModel(viewModel);
+        adapter.setViewModel(uploadViewModel);
         mBinding.rvEmoji.setAdapter(adapter);
         ivAddEmoji.setOnClickListener(this);
 
@@ -71,7 +72,7 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
             protected void onSingleClick(View view) {
                 Log.d(TAG, "----onClick: " + "开始上传");
                 for (Image image : allImages) {
-                    viewModel.uploadFiles(storageRef, image.getPath());
+                    uploadViewModel.uploadFiles(uploadViewModel.geStorageReference(), image.getPath());
                 }
             }
         });
@@ -79,8 +80,6 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
 
     @Override
     public void initData() {
-
-        createReference();
 
         upLoadImagesLiveData.observe(this, new Observer<List<Image>>() {
             @Override
@@ -99,19 +98,23 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
         });
 
         //图片上传成功后返回的url
+        uploadViewModel.getUrlLiveData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                imagesUrl.add(s);
+                if (imagesUrl.size() == allImages.size()) {
+                    String content = mBinding.etContent.getText().toString();
+                    viewModel.savePost(content, imagesUrl);
+                }
+            }
+        });
+
         stringMutableLiveData.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 if (s.equals("发帖成功")) {
                     activity.get().finish();
-                } else {
-                    imagesUrl.add(s);
-                    if (imagesUrl.size() == allImages.size()) {
-                        String content = mBinding.etContent.getText().toString();
-                        viewModel.savePost(content, imagesUrl);
-                    }
                 }
-
             }
         });
     }
@@ -130,11 +133,6 @@ public class CommunityActivity extends BaseBindingActivity<ActivityCommunityBind
         }
     }
 
-    //创建FirebaseStorage引用
-    public void createReference() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
-    }
 
     @Override
     public void onClick(View v) {

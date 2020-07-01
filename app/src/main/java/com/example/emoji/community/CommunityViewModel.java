@@ -35,17 +35,9 @@ import cn.bmob.v3.listener.SaveListener;
  * 邮箱:1546352238@qq.com
  */
 public class CommunityViewModel extends ViewModel {
-    private Application application;
-    private MutableLiveData<List<Image>> upLoadImagesLiveData;
+
     private MutableLiveData<String> stringMutableLiveData;
     private MutableLiveData<List<Post>> queryAllPostLiveData;
-
-    public MutableLiveData<List<Image>> getUpLoadImagesLiveData() {
-        if (upLoadImagesLiveData == null) {
-            upLoadImagesLiveData = new MutableLiveData<>();
-        }
-        return upLoadImagesLiveData;
-    }
 
     public MutableLiveData<String> getStringMutableLiveData() {
         if (stringMutableLiveData == null) {
@@ -67,59 +59,7 @@ public class CommunityViewModel extends ViewModel {
         return getQueryAllPostLiveData().getValue();
     }
 
-    //FirebaseStorage上传文件
-    public void uploadFiles(StorageReference storageRef, String path) {
 
-//        StorageReference imagesRef = storageRef.child("images");
-
-        Uri file = Uri.fromFile(new File(path));
-        StorageReference riversRef = storageRef.child("emojiFiles/" + Objects.requireNonNull(file.getLastPathSegment()));
-        UploadTask uploadTask = riversRef.putFile(file);
-//
-        // Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                ToastUtil.toastShort("上传图片失败！！！");
-                Log.d(TAG, "----onFailure: " + exception.toString());
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-                ToastUtil.toastShort("上传图片成功！！！");
-                getDownloadUrl(storageRef, path);
-            }
-        });
-
-    }
-
-    //获取上传文件的url
-    public void getDownloadUrl(StorageReference storageRef, String path) {
-        Uri file = Uri.fromFile(new File(path));
-        storageRef.child("emojiFiles/" + Objects.requireNonNull(file.getLastPathSegment())).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Log.d(TAG, "----onSuccess: " + uri);
-
-                stringMutableLiveData.postValue(uri.toString());
-                // Got the download URL for 'users/me/profile.png'
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-                Log.d(TAG, "---onFailure: " + exception.toString());
-            }
-        });
-    }
 
     private static final String TAG = "CommunityViewModel";
 

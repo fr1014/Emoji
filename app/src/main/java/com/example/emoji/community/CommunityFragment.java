@@ -1,11 +1,6 @@
 package com.example.emoji.community;
 
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -16,7 +11,7 @@ import com.example.emoji.MyApplication;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseBindingFragment;
 import com.example.emoji.community.upload.CommunityActivity;
-import com.example.emoji.data.bmob.Post;
+import com.example.emoji.community.upload.CommunityAdapter;
 import com.example.emoji.databinding.FragmentCommunityBinding;
 import com.example.emoji.utils.ToastUtil;
 import com.example.media.imageselect.CustomItemDecoration;

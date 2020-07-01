@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.emoji.data.bmob.Comment;
 import com.example.emoji.data.bmob.Post;
 
+import java.util.Collections;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -49,6 +50,7 @@ public class CommentViewModel extends ViewModel {
             public void done(String objectId, BmobException e) {
                 if (e == null) {
                     Log.d(TAG, "----done: " + "评论发表成功");
+                    getComment(comment.getPost());
                 } else {
                     Log.d(TAG, "----done: 失败: " + e.getMessage());
                 }
@@ -71,6 +73,7 @@ public class CommentViewModel extends ViewModel {
 
             @Override
             public void done(List<Comment> data, BmobException e) {
+                Collections.reverse(data);
                 comments.postValue(data);
             }
         });

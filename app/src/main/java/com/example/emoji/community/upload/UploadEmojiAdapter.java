@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseRecyclerViewAdapter;
 import com.example.emoji.community.CommunityViewModel;
+import com.example.emoji.community.UploadViewModel;
 import com.example.media.bean.Image;
 import com.example.media.utils.GlideUtils;
 
@@ -27,7 +28,7 @@ import java.util.List;
  */
 public class UploadEmojiAdapter extends BaseRecyclerViewAdapter<Image> {
     private Context context;
-    private CommunityViewModel viewModel;
+    private UploadViewModel viewModel;
 
     public UploadEmojiAdapter(Context context) {
         this.context = context;
@@ -44,7 +45,7 @@ public class UploadEmojiAdapter extends BaseRecyclerViewAdapter<Image> {
     }
 
     public void setViewModel(ViewModel viewModel){
-        this.viewModel = (CommunityViewModel) viewModel;
+        this.viewModel = (UploadViewModel) viewModel;
     }
 
     public void removeData(Image data) {
