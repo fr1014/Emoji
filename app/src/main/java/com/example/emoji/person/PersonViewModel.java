@@ -127,6 +127,10 @@ public class PersonViewModel extends AndroidViewModel {
         });
     }
 
+    //登出
+    public void logOut(){
+        BmobUser.logOut();
+    }
 //    public void includesForCreateReference(String path) {
 //        FirebaseStorage storage = FirebaseStorage.getInstance();
 //        StorageReference storageRef = storage.getReference();

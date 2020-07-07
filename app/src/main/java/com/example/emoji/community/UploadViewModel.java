@@ -82,7 +82,7 @@ public class UploadViewModel extends ViewModel {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                 // ...
-                ToastUtil.toastShort("上传图片成功！！！");
+//                ToastUtil.toastShort("上传图片成功！！！");
                 getDownloadUrl(storageRef, path);
             }
         });

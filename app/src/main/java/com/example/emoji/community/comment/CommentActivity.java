@@ -3,12 +3,8 @@ package com.example.emoji.community.comment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.PopupWindow;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -43,11 +39,11 @@ public class CommentActivity extends BaseBindingActivity<ActivityCommentBinding,
 
     private Post post;
     private CommentAdapter adapter;
-    private PopupWindow mPopupWindow;
     private UploadViewModel uploadViewModel;
     private List<Image> allImages = new ArrayList<>(); //将要评论的图片
     private List<String> urls = new ArrayList<>(); //上传图片返回的url
     private String content; //评论的内容
+    private float mProgressStatus = 0f; //进度条
 
     @Override
     protected ActivityCommentBinding getViewBinding() {
@@ -111,6 +107,7 @@ public class CommentActivity extends BaseBindingActivity<ActivityCommentBinding,
                     ToastUtil.toastShort("评论的内容不能为空!!!");
                 } else {
                     if (allImages.size() > 0) {
+                        mBinding.rlProgress.setVisibility(View.VISIBLE);
                         for (Image image : allImages) {
                             uploadViewModel.uploadFiles(uploadViewModel.geStorageReference(), image.getPath());
                         }
@@ -137,6 +134,7 @@ public class CommentActivity extends BaseBindingActivity<ActivityCommentBinding,
             @Override
             public void onChanged(List<Comment> comments) {
                 adapter.setData(comments);
+                mBinding.rlProgress.setVisibility(View.GONE);
             }
         });
 
@@ -155,6 +153,9 @@ public class CommentActivity extends BaseBindingActivity<ActivityCommentBinding,
             @Override
             public void onChanged(String s) {
                 urls.add(s);
+                mProgressStatus = urls.size() * 100 / allImages.size();
+                mBinding.tvProgress.setText("正在上传: " + mProgressStatus + "%");
+                mBinding.progress.setProgress((int) mProgressStatus);
                 if (urls.size() == allImages.size()) {
                     saveComment(urls);
                 }
@@ -183,9 +184,7 @@ public class CommentActivity extends BaseBindingActivity<ActivityCommentBinding,
                 List<Image> images = data.getParcelableArrayListExtra(ImageSelector.IMAGE_SELECTED);
                 if (images != null) {
                     allImages.addAll(images);
-                    if (mPopupWindow != null) {
-                        mPopupWindow.dismiss();
-                    }
+
                     show(allImages);
                     uploadViewModel.getUpLoadImagesLiveData().postValue(allImages);
                 }
