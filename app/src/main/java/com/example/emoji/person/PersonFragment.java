@@ -41,7 +41,7 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
     private TextView userName;
     private TextView praised; //获赞
     private TextView attention; //关注
-//    private MutableLiveData<MyUser> liveData;
+    //    private MutableLiveData<MyUser> liveData;
 //    private MutableLiveData<String> picLiveData;
     private StorageReference storageRef;
     private PersonAdapter adapter;
@@ -86,10 +86,13 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
         login.setVisibility(View.INVISIBLE);
         unLogin.setVisibility(View.VISIBLE);
 
-        String[] sTitle = {"我的帖子", "我的评论", "我的收藏", "我赞过的", "浏览历史", "帮助和反馈", "推荐给好友"};
+        String[] sTitle = {"我的帖子", "我的评论", "我的收藏", "我赞过的", "浏览历史", "帮助和反馈", "推荐给好友", "退出登录"};
+        Integer[] res = {R.drawable.ic_community, R.drawable.ic_comment, R.drawable.ic_collect, R.drawable.ic_good, R.drawable.ic_history, R.drawable.ic_help, R.drawable.ic_share, R.drawable.ic_logout};
         adapter = new PersonAdapter(getContext());
         adapter.setHeaderView(headView);
+        adapter.setImageRes(Arrays.asList(res));
         adapter.setData(Arrays.asList(sTitle));
+        adapter.setPersonViewModel(viewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -102,11 +105,15 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
         createReference();
 
         viewModel.getUserMutableLiveData().observe(this, user -> {
-            login.setVisibility(View.VISIBLE);
-            unLogin.setVisibility(View.INVISIBLE);
-            Log.d(TAG, "----onChanged: " + user.toString());
-            GlideUtils.load(head, user.getHeadPicUrl());
-            userName.setText(user.getUsername());
+            if (user != null) {
+                login.setVisibility(View.VISIBLE);
+                unLogin.setVisibility(View.INVISIBLE);
+                GlideUtils.load(head, user.getHeadPicUrl());
+                userName.setText(user.getUsername());
+            } else {
+                login.setVisibility(View.INVISIBLE);
+                unLogin.setVisibility(View.VISIBLE);
+            }
         });
 
         viewModel.getStringMutableLiveData().observe(this, headPicUrl -> {

@@ -5,14 +5,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import com.example.emoji.R;
 import com.example.emoji.base.BaseRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * 创建时间:2020/6/16
@@ -22,32 +27,51 @@ import java.util.List;
 public class PersonAdapter extends BaseRecyclerViewAdapter<String> {
 
     private Context context;
+    private PersonViewModel viewModel;
+    private List<Integer> imageRes = new ArrayList<>();
 
     public PersonAdapter(Context context) {
         this.context = context;
     }
 
+    public void setImageRes(List<Integer> imageRes) {
+        this.imageRes = imageRes;
+    }
+
+    public void setPersonViewModel(PersonViewModel viewModel){
+        this.viewModel = viewModel;
+    }
+
     @Override
     public BaseRecyclerViewAdapter.BaseRecyclerViewHolder onCreateRecyclerViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_person, parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_person, parent, false);
         return new PersonHolder(view);
     }
 
     private static final String TAG = "PersonAdapter";
+
     @Override
     protected void bindData(BaseRecyclerViewHolder holder, String data) {
         PersonHolder personHolder = (PersonHolder) holder;
-        Log.d(TAG, "----bindData: "+data);
+        Log.d(TAG, "----bindData: " + data);
+        int index = mData.indexOf(data);
+        personHolder.ivIcon.setImageResource(imageRes.get(index));
         personHolder.textView.setText(data);
-        personHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
+        personHolder.itemView.setOnClickListener(v -> {
+            switch (index){
+                case 0:
+                    break;
+                case 7:
+                    viewModel.logOut();
+                    break;
             }
         });
+
     }
 
     static class PersonHolder extends BaseRecyclerViewHolder {
+        public ImageView ivIcon;
         public TextView textView;
 
         public PersonHolder(@NonNull View itemView) {
@@ -56,6 +80,7 @@ public class PersonAdapter extends BaseRecyclerViewAdapter<String> {
 
         @Override
         public void findView(View v) {
+            ivIcon = v.findViewById(R.id.iv_icon);
             textView = v.findViewById(R.id.tv_title);
         }
     }

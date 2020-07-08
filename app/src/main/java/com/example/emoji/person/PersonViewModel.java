@@ -1,12 +1,11 @@
 package com.example.emoji.person;
 
-import android.app.Application;
 import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.emoji.data.bmob.MyUser;
 import com.example.emoji.utils.ToastUtil;
@@ -28,17 +27,11 @@ import cn.bmob.v3.listener.UpdateListener;
  * 作者:fr
  * 邮箱:1546352238@qq.com
  */
-public class PersonViewModel extends AndroidViewModel {
+public class PersonViewModel extends ViewModel {
 
-    private Application application;
     private MutableLiveData<MyUser> userMutableLiveData;
     private MutableLiveData<Boolean> booleanMutableLiveData; //是否注册成功
     private MutableLiveData<String> stringMutableLiveData; //上传头像
-
-    public PersonViewModel(@NonNull Application application) {
-        super(application);
-        this.application = application;
-    }
 
     public MutableLiveData<MyUser> getUserMutableLiveData() {
         if (userMutableLiveData == null) {
@@ -130,6 +123,7 @@ public class PersonViewModel extends AndroidViewModel {
     //登出
     public void logOut(){
         BmobUser.logOut();
+        userMutableLiveData.postValue(getUser());
     }
 //    public void includesForCreateReference(String path) {
 //        FirebaseStorage storage = FirebaseStorage.getInstance();
