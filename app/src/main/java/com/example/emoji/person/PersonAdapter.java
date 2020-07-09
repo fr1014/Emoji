@@ -10,9 +10,11 @@ import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.emoji.R;
 import com.example.emoji.base.BaseRecyclerViewAdapter;
+import com.example.emoji.community.CommunityFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +31,11 @@ public class PersonAdapter extends BaseRecyclerViewAdapter<String> {
     private Context context;
     private PersonViewModel viewModel;
     private List<Integer> imageRes = new ArrayList<>();
+    private FragmentManager manager;
 
-    public PersonAdapter(Context context) {
+    public PersonAdapter(Context context, FragmentManager manager) {
         this.context = context;
+        this.manager = manager;
     }
 
     public void setImageRes(List<Integer> imageRes) {
@@ -61,6 +65,7 @@ public class PersonAdapter extends BaseRecyclerViewAdapter<String> {
         personHolder.itemView.setOnClickListener(v -> {
             switch (index){
                 case 0:
+                    manager.beginTransaction().add(R.id.rootView, CommunityFragment.getInstance(true)).addToBackStack(null).commit();
                     break;
                 case 7:
                     viewModel.logOut();

@@ -38,6 +38,7 @@ public class CommunityViewModel extends ViewModel {
 
     private MutableLiveData<String> stringMutableLiveData;
     private MutableLiveData<List<Post>> queryAllPostLiveData;
+    private MutableLiveData<List<Post>> queryPostLiveData;
 
     public MutableLiveData<String> getStringMutableLiveData() {
         if (stringMutableLiveData == null) {
@@ -47,7 +48,7 @@ public class CommunityViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<Post>> getQueryAllPostLiveData() {
-        if (queryAllPostLiveData == null){
+        if (queryAllPostLiveData == null) {
             queryAllPostLiveData = new MutableLiveData<>();
             //查询所有帖子
             queryAllPost();
@@ -55,11 +56,18 @@ public class CommunityViewModel extends ViewModel {
         return queryAllPostLiveData;
     }
 
-    public List<Post> getPostVale(){
-        return getQueryAllPostLiveData().getValue();
+    public MutableLiveData<List<Post>> getQueryPostLiveData() {
+        if (queryPostLiveData == null) {
+            queryPostLiveData = new MutableLiveData<>();
+            //查询对应用户帖子
+            queryPostByUser();
+        }
+        return queryPostLiveData;
     }
 
-
+    public List<Post> getPostVale() {
+        return getQueryAllPostLiveData().getValue();
+    }
 
     private static final String TAG = "CommunityViewModel";
 
@@ -90,6 +98,33 @@ public class CommunityViewModel extends ViewModel {
         }
     }
 
+    //查询对应用户的帖子
+    private void queryPostByUser() {
+        if (BmobUser.isLogin()) {
+            BmobQuery<Post> query = new BmobQuery<>();
+            query.addWhereEqualTo("author", BmobUser.getCurrentUser(MyUser.class));
+            query.order("-updatedAt");
+            //包含作者信息
+            query.include("author");
+            query.findObjects(new FindListener<Post>() {
+
+                @Override
+                public void done(List<Post> object, BmobException e) {
+                    if (e == null) {
+                        queryPostLiveData.postValue(object);
+                        ToastUtil.toastShort("查询成功!!!");
+                    } else {
+                        Log.d(TAG, "----done: " + e.toString());
+                    }
+                }
+
+            });
+        } else {
+            ToastUtil.toastShort("请先登录!!!");
+        }
+    }
+
+    //查询全部帖子
     public void queryAllPost() {
         BmobQuery<Post> query = new BmobQuery<>();
         query.order("-updatedAt");
@@ -127,8 +162,8 @@ public class CommunityViewModel extends ViewModel {
                 public void done(List<Post> object, BmobException e) {
                     if (e == null) {
                         ToastUtil.toastShort("查询成功");
-                        for (Post post:object){
-                            Log.d(TAG, "----done: "+post.toString());
+                        for (Post post : object) {
+                            Log.d(TAG, "----done: " + post.toString());
                         }
                     } else {
                         Log.d(TAG, "----done: query:" + e.toString());

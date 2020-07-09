@@ -31,7 +31,7 @@ public abstract class BaseBindingFragment<VB extends ViewBinding,VM extends View
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "----onCreateView: ");
         initViewModel();
-        mBinding = getViewBinding();
+        mBinding = getViewBinding(container);
         return mBinding.getRoot();
     }
 
@@ -47,7 +47,7 @@ public abstract class BaseBindingFragment<VB extends ViewBinding,VM extends View
 
     }
 
-    protected abstract VB getViewBinding();
+    protected abstract VB getViewBinding(ViewGroup container);
 
     protected abstract void initView(View view);
 
@@ -117,5 +117,16 @@ public abstract class BaseBindingFragment<VB extends ViewBinding,VM extends View
     public void onDetach() {
         Log.d(TAG, "----onDetach: ");
         super.onDetach();
+    }
+
+    /*
+     * fragment中的返回键
+     *
+     * 默认返回false，交给Activity处理
+     * 返回true：执行fragment中需要执行的逻辑
+     * 返回false：执行activity中的 onBackPressed
+     * */
+    public boolean onBackPressed() {
+        return false;
     }
 }

@@ -9,6 +9,8 @@ import android.Manifest;
 import android.util.Log;
 
 import com.example.emoji.base.BaseBindingActivity;
+import com.example.emoji.base.BaseBindingFragment;
+import com.example.emoji.base.BaseFragment;
 import com.example.emoji.community.CommunityFragment;
 import com.example.emoji.databinding.ActivityBottomNavigationBinding;
 import com.example.emoji.folder.FolderFragment;
@@ -37,7 +39,7 @@ public class BottomNavigationActivity extends BaseBindingActivity<ActivityBottom
     protected void initView() {
         initPermission();
 
-        mFragments = new Fragment[]{FolderFragment.getInstance(), CommunityFragment.getInstance(), PersonFragment.getInstance()};
+        mFragments = new Fragment[]{FolderFragment.getInstance(), CommunityFragment.getInstance(false), PersonFragment.getInstance()};
 
         mBinding.navigation.setOnNavigationItemSelectedListener(item -> {
             fragmentRes = item.getItemId();
@@ -103,8 +105,14 @@ public class BottomNavigationActivity extends BaseBindingActivity<ActivityBottom
 
         for (Fragment fragment : fragments) {
             /*如果是自己封装的Fragment的子类  判断是否需要处理返回事件*/
-            if (fragment instanceof com.example.emoji.base.BaseFragment) {
-                if (((com.example.emoji.base.BaseFragment) fragment).onBackPressed()) {
+            if (fragment instanceof BaseFragment) {
+                if (((BaseFragment) fragment).onBackPressed()) {
+                    /*在Fragment中处理返回事件*/
+                    Log.d(TAG, "----onBackPressed: ");
+                    return;
+                }
+            } else if (fragment instanceof BaseBindingFragment) {
+                if (((BaseBindingFragment) fragment).onBackPressed()) {
                     /*在Fragment中处理返回事件*/
                     Log.d(TAG, "----onBackPressed: ");
                     return;

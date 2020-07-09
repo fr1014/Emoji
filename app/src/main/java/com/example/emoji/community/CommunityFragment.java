@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.emoji.MyApplication;
 import com.example.emoji.R;
@@ -23,12 +24,14 @@ import cn.bmob.v3.BmobUser;
 public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBinding, CommunityViewModel> implements View.OnClickListener {
 
     private CommunityAdapter adapter;
+    private static boolean isPerson = false;  //(false)数据来源于全部
 
     public CommunityFragment() {
         // Required empty public constructor
     }
 
-    public static CommunityFragment getInstance() {
+    public static CommunityFragment getInstance(boolean flag) {
+        isPerson = flag;
         CommunityFragment fragment = new CommunityFragment();
         return fragment;
     }
@@ -39,8 +42,8 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
     }
 
     @Override
-    protected FragmentCommunityBinding getViewBinding() {
-        return FragmentCommunityBinding.inflate(getLayoutInflater());
+    protected FragmentCommunityBinding getViewBinding(ViewGroup container) {
+        return FragmentCommunityBinding.inflate(getLayoutInflater(), container, false);
     }
 
     @Override
@@ -66,13 +69,20 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
     @Override
     protected void initData() {
 
-        viewModel.getQueryAllPostLiveData().observe(this, posts -> {
-            Log.d(TAG, "----initData: " + posts.size());
-            adapter.setData(posts);
+        if (!isPerson) {
+            viewModel.getQueryAllPostLiveData().observe(this, posts -> {
+                Log.d(TAG, "----initData: " + posts.size());
+                adapter.setData(posts);
 //            for (Post post:posts){
 //                Log.d(TAG, "----initData: "+post.getObjectId());
 //            }
-        });
+            });
+        } else {
+            viewModel.getQueryPostLiveData().observe(this, posts -> {
+                Log.d(TAG, "----person: " + posts.size());
+                adapter.setData(posts);
+            });
+        }
     }
 
     @Override
@@ -88,5 +98,14 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
         }
     }
 
-
+    @Override
+    public boolean onBackPressed() {
+        Log.d(TAG, "++++onBackPressed: " + 1);
+        if (getParentFragment() != null) {
+            Log.d(TAG, "++++onBackPressed: " + 2);
+            getParentFragment().getChildFragmentManager().popBackStack();
+            return true;
+        }
+        return false;
+    }
 }

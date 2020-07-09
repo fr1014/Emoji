@@ -10,12 +10,16 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewbinding.ViewBinding;
 
 import com.example.emoji.R;
+import com.example.emoji.base.BaseBindingFragment;
 import com.example.emoji.base.BaseFragment;
 import com.example.emoji.data.bmob.MyUser;
 import com.example.emoji.utils.GlideUtils;
@@ -88,7 +92,7 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
 
         String[] sTitle = {"我的帖子", "我的评论", "我的收藏", "我赞过的", "浏览历史", "帮助和反馈", "推荐给好友", "退出登录"};
         Integer[] res = {R.drawable.ic_community, R.drawable.ic_comment, R.drawable.ic_collect, R.drawable.ic_good, R.drawable.ic_history, R.drawable.ic_help, R.drawable.ic_share, R.drawable.ic_logout};
-        adapter = new PersonAdapter(getContext());
+        adapter = new PersonAdapter(getContext(),getChildFragmentManager());
         adapter.setHeaderView(headView);
         adapter.setImageRes(Arrays.asList(res));
         adapter.setData(Arrays.asList(sTitle));
@@ -169,5 +173,22 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
     public void createReference() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+
+        for (Fragment fragment : fragments) {
+            /*如果是自己封装的Fragment的子类  判断是否需要处理返回事件*/
+            if (fragment instanceof BaseBindingFragment) {
+                if (((BaseBindingFragment) fragment).onBackPressed()) {
+                    /*在Fragment中处理返回事件*/
+                    Log.d(TAG, "----onBackPressed: ");
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
