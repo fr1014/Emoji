@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
@@ -18,8 +17,6 @@ import com.example.emoji.community.CommunityFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.BmobUser;
 
 /**
  * 创建时间:2020/6/16

@@ -23,8 +23,6 @@ import java.util.List;
 
 public class FolderFragment extends BaseFragment<FolderViewModel> {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private RecyclerView recyclerView;
     private FolderAdapter adapter;
     public MotionEventImageView motionView;
