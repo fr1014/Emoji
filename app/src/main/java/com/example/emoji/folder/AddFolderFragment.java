@@ -168,10 +168,12 @@ public class AddFolderFragment extends BaseFragment<FolderViewModel> {
     /*重写父类的onBackPressed*/
     @Override
     public boolean onBackPressed() {
-        assert getParentFragment() != null;
-        getParentFragment().getChildFragmentManager().popBackStack();
-        Log.d(TAG, "----onBackPressed: ");
-        return true;
+        if(getParentFragment() != null){
+            getParentFragment().getChildFragmentManager().popBackStack();
+            Log.d(TAG, "----onBackPressed: ");
+            return true;
+        }
+        return false;
     }
 
 }
