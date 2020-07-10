@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:id="@+id/rootView"
     android:orientation="vertical">
 
     <!--用户未登录-->
-    <include
+    <ViewStub
         android:id="@+id/unlogin"
-        layout="@layout/fragment_person_unlogin"
-        android:visibility="visible" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/fragment_person_unlogin" />
+
     <!--用户已登录-->
-    <include
+    <ViewStub
         android:id="@+id/login"
-        layout="@layout/fragment_person_login"
-        android:visibility="invisible" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/fragment_person_login" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

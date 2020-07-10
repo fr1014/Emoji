@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -36,8 +37,10 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PersonFragment extends BaseFragment<PersonViewModel> implements View.OnClickListener {
-    private View unLogin; //未登录的页面
-    private View login;   //已登录的页面
+    private ViewStub unLogin; //未登录的页面
+    private ViewStub login;   //已登录的页面
+    private View loginView;
+    private boolean isInflateLogin = false; //login界面是否已经inflate
     private Button btLogin;
     private ConstraintLayout rootView;
     private View headView;
@@ -75,30 +78,48 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
         rootView = view.findViewById(R.id.rootView);
         unLogin = view.findViewById(R.id.unlogin);
         login = view.findViewById(R.id.login);
-        btLogin = view.findViewById(R.id.bt_login);
-        recyclerView = view.findViewById(R.id.rv_person);
 
-        headView = LayoutInflater.from(getContext()).inflate(R.layout.person_head, rootView, false);
-        head = headView.findViewById(R.id.iv_head);
-        userName = headView.findViewById(R.id.tv_name);
+        login.setOnInflateListener(new ViewStub.OnInflateListener() {
+            @Override
+            public void onInflate(ViewStub stub, View inflated) {
+                isInflateLogin = true;
 
-        btLogin.setOnClickListener(this);
+                //inflate后的一些操作
+                headView = LayoutInflater.from(getContext()).inflate(R.layout.person_head, rootView, false);
+                head = headView.findViewById(R.id.iv_head);
+                userName = headView.findViewById(R.id.tv_name);
+
+                initHead(viewModel.getUser());
+
+                recyclerView = inflated.findViewById(R.id.rv_person);
+                String[] sTitle = {"我的帖子", "我的评论", "我的收藏", "我赞过的", "浏览历史", "帮助和反馈", "推荐给好友", "退出登录"};
+                Integer[] res = {R.drawable.ic_community, R.drawable.ic_comment, R.drawable.ic_collect, R.drawable.ic_good, R.drawable.ic_history, R.drawable.ic_help, R.drawable.ic_share, R.drawable.ic_logout};
+                adapter = new PersonAdapter(getContext(), getChildFragmentManager());
+                adapter.setHeaderView(headView);
+                adapter.setImageRes(Arrays.asList(res));
+                adapter.setData(Arrays.asList(sTitle));
+                adapter.setPersonViewModel(viewModel);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
+        });
+
+        //如果用户未登录，填充未登录的界面
+        if ((viewModel.getUser()) == null) {
+            View v = unLogin.inflate();
+            btLogin = v.findViewById(R.id.bt_login);
+            btLogin.setOnClickListener(this);
+        } else {
+            login.inflate();
+        }
 //        Boolean status = UserStatusUtil.readLoginStatus(MyApplication.getInstance());
 
+    }
+
+    private void initHead(MyUser user) {
         head.setOnClickListener(this);
-
-        login.setVisibility(View.INVISIBLE);
-        unLogin.setVisibility(View.VISIBLE);
-
-        String[] sTitle = {"我的帖子", "我的评论", "我的收藏", "我赞过的", "浏览历史", "帮助和反馈", "推荐给好友", "退出登录"};
-        Integer[] res = {R.drawable.ic_community, R.drawable.ic_comment, R.drawable.ic_collect, R.drawable.ic_good, R.drawable.ic_history, R.drawable.ic_help, R.drawable.ic_share, R.drawable.ic_logout};
-        adapter = new PersonAdapter(getContext(),getChildFragmentManager());
-        adapter.setHeaderView(headView);
-        adapter.setImageRes(Arrays.asList(res));
-        adapter.setData(Arrays.asList(sTitle));
-        adapter.setPersonViewModel(viewModel);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        GlideUtils.load(head, user.getHeadPicUrl());
+        userName.setText(user.getUsername());
     }
 
     private static final String TAG = "PersonFragment";
@@ -110,13 +131,22 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
 
         viewModel.getUserMutableLiveData().observe(this, user -> {
             if (user != null) {
-                login.setVisibility(View.VISIBLE);
-                unLogin.setVisibility(View.INVISIBLE);
-                GlideUtils.load(head, user.getHeadPicUrl());
-                userName.setText(user.getUsername());
+                try {
+                    login.inflate();
+                    initHead(user);
+                } catch (Exception e) {
+                    login.setVisibility(View.VISIBLE);
+                }
+                unLogin.setVisibility(View.GONE);
             } else {
-                login.setVisibility(View.INVISIBLE);
-                unLogin.setVisibility(View.VISIBLE);
+                try {
+                    View inflate = unLogin.inflate();
+                    btLogin = inflate.findViewById(R.id.bt_login);
+                    btLogin.setOnClickListener(this);
+                } catch (Exception e) {
+                    unLogin.setVisibility(View.VISIBLE);
+                }
+                login.setVisibility(View.GONE);
             }
         });
 
