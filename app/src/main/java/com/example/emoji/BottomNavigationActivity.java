@@ -39,7 +39,7 @@ public class BottomNavigationActivity extends BaseBindingActivity<ActivityBottom
     protected void initView() {
         initPermission();
 
-        mFragments = new Fragment[]{FolderFragment.getInstance(), CommunityFragment.getInstance(false), PersonFragment.getInstance()};
+        mFragments = new Fragment[]{FolderFragment.getInstance(), CommunityFragment.getInstance(), PersonFragment.getInstance()};
 
         mBinding.navigation.setOnNavigationItemSelectedListener(item -> {
             fragmentRes = item.getItemId();

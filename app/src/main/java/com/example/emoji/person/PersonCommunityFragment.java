@@ -1,16 +1,16 @@
-package com.example.emoji.community;
+package com.example.emoji.person;
+
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.emoji.MyApplication;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseBindingFragment;
+import com.example.emoji.community.CommunityViewModel;
 import com.example.emoji.community.upload.CommunityActivity;
 import com.example.emoji.community.upload.CommunityAdapter;
 import com.example.emoji.databinding.FragmentCommunityBinding;
@@ -21,16 +21,16 @@ import java.util.Objects;
 
 import cn.bmob.v3.BmobUser;
 
-public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBinding, CommunityViewModel> implements View.OnClickListener {
+public class PersonCommunityFragment extends BaseBindingFragment<FragmentCommunityBinding, CommunityViewModel> implements View.OnClickListener {
 
     private CommunityAdapter adapter;
 
-    public CommunityFragment() {
+    public PersonCommunityFragment() {
         // Required empty public constructor
     }
 
-    public static CommunityFragment getInstance() {
-        CommunityFragment fragment = new CommunityFragment();
+    public static PersonCommunityFragment getInstance() {
+        PersonCommunityFragment fragment = new PersonCommunityFragment();
         return fragment;
     }
 
@@ -58,21 +58,14 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
         itemDecoration.setDividerHeight(12);
         mBinding.rvCommunity.addItemDecoration(itemDecoration);
         adapter = new CommunityAdapter(getContext());
-//        adapter.setData(data);
         mBinding.rvCommunity.setAdapter(adapter);
     }
-
-    private static final String TAG = "CommunityFragment";
 
     @Override
     protected void initData() {
 
-        viewModel.getQueryAllPostLiveData().observe(this, posts -> {
-            Log.d(TAG, "----initData: " + posts.size());
+        viewModel.getQueryPostLiveData().observe(this, posts -> {
             adapter.setData(posts);
-//            for (Post post:posts){
-//                Log.d(TAG, "----initData: "+post.getObjectId());
-//            }
         });
     }
 
@@ -91,9 +84,7 @@ public class CommunityFragment extends BaseBindingFragment<FragmentCommunityBind
 
     @Override
     public boolean onBackPressed() {
-        Log.d(TAG, "++++onBackPressed: " + 1);
         if (getParentFragment() != null) {
-            Log.d(TAG, "++++onBackPressed: " + 2);
             getParentFragment().getChildFragmentManager().popBackStack();
             return true;
         }

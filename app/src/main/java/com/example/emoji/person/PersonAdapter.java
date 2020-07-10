@@ -62,7 +62,7 @@ public class PersonAdapter extends BaseRecyclerViewAdapter<String> {
         personHolder.itemView.setOnClickListener(v -> {
             switch (index){
                 case 0:
-                    manager.beginTransaction().add(R.id.rootView, CommunityFragment.getInstance(true)).addToBackStack(null).commit();
+                    manager.beginTransaction().add(R.id.rootView, PersonCommunityFragment.getInstance()).addToBackStack(null).commit();
                     break;
                 case 7:
                     viewModel.logOut();
