@@ -24,6 +24,7 @@ import com.example.emoji.utils.GlideUtils;
 import com.example.media.bean.Image;
 import com.example.media.imageselect.images.ImageSelectActivity;
 import com.example.media.utils.ImageSelector;
+import com.example.media.utils.StringUtils;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -130,10 +131,10 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
             if (user != null) {
                 try {
                     login.inflate();
-                    initHead(user);
                 } catch (Exception e) {
                     login.setVisibility(View.VISIBLE);
                 }
+                initHead(user);
                 unLogin.setVisibility(View.GONE);
             } else {
                 try {
@@ -149,7 +150,7 @@ public class PersonFragment extends BaseFragment<PersonViewModel> implements Vie
 
         viewModel.getStringMutableLiveData().observe(this, headPicUrl -> {
             MyUser bmobUser = viewModel.getUser();
-            if (!bmobUser.getHeadPicUrl().equals(headPicUrl)) {
+            if (StringUtils.isEmpty(bmobUser.getHeadPicUrl()) || !bmobUser.getHeadPicUrl().equals(headPicUrl)) {
                 MyUser newUser = new MyUser();
                 newUser.setHeadPicUrl(headPicUrl);
                 viewModel.update(bmobUser, newUser);
