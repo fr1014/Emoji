@@ -8,21 +8,20 @@ import java.util.List;
  * 邮箱:1546352238@qq.com
  */
 public class CategoryPhoto {
-
     /**
-     * totalCategory : 2
+     * errorCode : 0
      * category : [{"id":1,"type":"photo","tags":"风景","imageURL":"https://cdn.pixabay.com/user/2018/01/12/08-06-25-409_250x250.jpg"},{"id":2,"type":"photo","tags":"人","imageURL":"https://cdn.pixabay.com/user/2019/04/11/22-45-05-994_250x250.jpg"}]
      */
 
-    private int totalCategory;
+    private String errorCode;
     private List<CategoryBean> category;
 
-    public int getTotalCategory() {
-        return totalCategory;
+    public String getErrorCode() {
+        return errorCode;
     }
 
-    public void setTotalCategory(int totalCategory) {
-        this.totalCategory = totalCategory;
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 
     public List<CategoryBean> getCategory() {

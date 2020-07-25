@@ -9,4 +9,7 @@ import androidx.lifecycle.ViewModel;
  */
 public class PhotoViewModel extends ViewModel {
 
+    public void getCategory(String url) {
+
+    }
 }

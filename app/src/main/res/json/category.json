@@ -1,0 +1,16 @@
+{
+  "errorCode":"0",
+  "category":[
+    {
+      "id":1,
+      "type":"photo",
+      "tags":"动漫",
+      "imageURL":"https://s1.ax1x.com/2018/12/23/FyvIW4.jpg"
+    },
+    {
+      "id":2,
+      "type":"photo",
+      "tags":"人",
+      "imageURL":"https://s1.ax1x.com/2018/12/23/Fyv4FU.jpg"
+    }]
+}
