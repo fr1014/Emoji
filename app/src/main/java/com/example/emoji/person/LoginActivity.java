@@ -5,12 +5,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.emoji.R;
 import com.example.emoji.base.BaseActivity;
-import com.example.emoji.data.bmob.MyUser;
+import com.example.emoji.data.entity.bmob.MyUser;
 import com.example.emoji.utils.ToastUtil;
 import com.example.media.utils.StringUtils;
 

@@ -1,4 +1,4 @@
-package com.example.emoji.data.room.dao;
+package com.example.emoji.data.entity.room.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.emoji.data.room.entity.FolderEntity;
+import com.example.emoji.data.entity.room.entity.FolderEntity;
 
 import java.util.List;
 

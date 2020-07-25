@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.emoji.MyApplication;
-import com.example.emoji.data.room.dao.FolderDao;
-import com.example.emoji.data.room.entity.FolderEntity;
+import com.example.emoji.data.entity.room.dao.FolderDao;
+import com.example.emoji.data.entity.room.entity.FolderEntity;
 import com.example.emoji.rx.RxSchedulers;
 import com.example.emoji.rx.SimpleConsumer;
 

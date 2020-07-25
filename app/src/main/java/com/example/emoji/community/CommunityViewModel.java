@@ -1,27 +1,15 @@
 package com.example.emoji.community;
 
-import android.app.Application;
-import android.net.Uri;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.emoji.data.bmob.MyUser;
-import com.example.emoji.data.bmob.Post;
+import com.example.emoji.data.entity.bmob.MyUser;
+import com.example.emoji.data.entity.bmob.Post;
 import com.example.emoji.utils.ToastUtil;
-import com.example.media.bean.Image;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;

@@ -1,4 +1,4 @@
-package com.example.emoji.data.room.entity;
+package com.example.emoji.data.entity.room.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;

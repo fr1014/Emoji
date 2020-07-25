@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.emoji.data.bmob.MyUser;
+import com.example.emoji.data.entity.bmob.MyUser;
 import com.example.emoji.utils.ToastUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

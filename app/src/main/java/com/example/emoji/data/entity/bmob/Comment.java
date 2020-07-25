@@ -1,4 +1,4 @@
-package com.example.emoji.data.bmob;
+package com.example.emoji.data.entity.bmob;
 
 import java.util.List;
 

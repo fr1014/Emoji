@@ -12,13 +12,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 
-import com.example.emoji.BottomNavigationActivity;
 import com.example.emoji.Constants;
 import com.example.emoji.R;
 import com.example.emoji.base.MyRecyclerViewAdapter;
-import com.example.emoji.data.room.entity.FolderEntity;
+import com.example.emoji.data.entity.room.entity.FolderEntity;
 import com.example.emoji.folder.emoji.EmojiActivity;
 import com.example.media.utils.GlideUtils;
 

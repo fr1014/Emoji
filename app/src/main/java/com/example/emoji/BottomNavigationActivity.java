@@ -15,6 +15,7 @@ import com.example.emoji.community.CommunityFragment;
 import com.example.emoji.databinding.ActivityBottomNavigationBinding;
 import com.example.emoji.folder.FolderFragment;
 import com.example.emoji.person.PersonFragment;
+import com.example.emoji.photo.PhotoFragment;
 import com.permission.Permission;
 import com.permission.PermissionListener;
 import com.permission.PermissionUtils;
@@ -39,7 +40,7 @@ public class BottomNavigationActivity extends BaseBindingActivity<ActivityBottom
     protected void initView() {
         initPermission();
 
-        mFragments = new Fragment[]{FolderFragment.getInstance(), CommunityFragment.getInstance(), PersonFragment.getInstance()};
+        mFragments = new Fragment[]{FolderFragment.getInstance(), PhotoFragment.getInstance(), CommunityFragment.getInstance(), PersonFragment.getInstance()};
 
         mBinding.navigation.setOnNavigationItemSelectedListener(item -> {
             fragmentRes = item.getItemId();
@@ -63,11 +64,14 @@ public class BottomNavigationActivity extends BaseBindingActivity<ActivityBottom
             case R.id.navigation_home:
                 fragment = mFragments[0];
                 break;
-            case R.id.navigation_community:
+            case R.id.navigation_photo:
                 fragment = mFragments[1];
                 break;
-            case R.id.navigation_profile:
+            case R.id.navigation_community:
                 fragment = mFragments[2];
+                break;
+            case R.id.navigation_profile:
+                fragment = mFragments[3];
                 break;
         }
         if (fragment != null) {

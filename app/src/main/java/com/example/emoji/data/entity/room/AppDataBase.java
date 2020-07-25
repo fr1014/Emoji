@@ -1,4 +1,4 @@
-package com.example.emoji.data.room;
+package com.example.emoji.data.entity.room;
 
 import android.content.Context;
 
@@ -6,10 +6,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.emoji.data.room.dao.EmojiDao;
-import com.example.emoji.data.room.dao.FolderDao;
-import com.example.emoji.data.room.entity.EmojiEntity;
-import com.example.emoji.data.room.entity.FolderEntity;
+import com.example.emoji.data.entity.room.dao.EmojiDao;
+import com.example.emoji.data.entity.room.dao.FolderDao;
+import com.example.emoji.data.entity.room.entity.EmojiEntity;
+import com.example.emoji.data.entity.room.entity.FolderEntity;
 
 /**
  * 创建时间:2020/4/20

@@ -5,8 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.emoji.data.bmob.Comment;
-import com.example.emoji.data.bmob.Post;
+import com.example.emoji.data.entity.bmob.Comment;
+import com.example.emoji.data.entity.bmob.Post;
 
 import java.util.Collections;
 import java.util.List;

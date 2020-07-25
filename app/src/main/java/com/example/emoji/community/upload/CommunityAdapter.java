@@ -16,7 +16,7 @@ import com.example.emoji.R;
 import com.example.emoji.base.BaseRecyclerViewAdapter;
 import com.example.emoji.community.CommunityEmojiAdapter;
 import com.example.emoji.community.comment.CommentActivity;
-import com.example.emoji.data.bmob.Post;
+import com.example.emoji.data.entity.bmob.Post;
 import com.example.emoji.utils.GlideUtils;
 import com.example.emoji.utils.ToastUtil;
 

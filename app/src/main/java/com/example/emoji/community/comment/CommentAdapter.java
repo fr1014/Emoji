@@ -13,8 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseRecyclerViewAdapter;
 import com.example.emoji.community.CommunityEmojiAdapter;
-import com.example.emoji.community.upload.CommunityAdapter;
-import com.example.emoji.data.bmob.Comment;
+import com.example.emoji.data.entity.bmob.Comment;
 import com.example.emoji.utils.GlideUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;

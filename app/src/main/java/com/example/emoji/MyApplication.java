@@ -2,7 +2,7 @@ package com.example.emoji;
 
 import android.app.Application;
 
-import com.example.emoji.data.room.AppDataBase;
+import com.example.emoji.data.entity.room.AppDataBase;
 import com.example.emoji.rx.RxSchedulers;
 import com.example.emoji.rx.SimpleConsumer;
 

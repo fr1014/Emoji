@@ -1,4 +1,4 @@
-package com.example.emoji.data.bmob;
+package com.example.emoji.data.entity.bmob;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import java.util.List;
 
 import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
 
 /**

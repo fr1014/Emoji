@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseBindingFragment;
 import com.example.emoji.base.BaseFragment;
-import com.example.emoji.data.bmob.MyUser;
+import com.example.emoji.data.entity.bmob.MyUser;
 import com.example.emoji.utils.GlideUtils;
 import com.example.media.bean.Image;
 import com.example.media.imageselect.images.ImageSelectActivity;

@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import com.example.emoji.Constants;
 import com.example.emoji.R;
 import com.example.emoji.base.BaseFragment;
-import com.example.emoji.data.room.entity.FolderEntity;
+import com.example.emoji.data.entity.room.entity.FolderEntity;
 import com.example.media.bean.Image;
 import com.example.media.imageselect.images.ImageSelectActivity;
 import com.example.media.utils.FileUtils;

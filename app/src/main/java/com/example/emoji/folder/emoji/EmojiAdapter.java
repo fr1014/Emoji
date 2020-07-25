@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -13,7 +12,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.emoji.R;
 import com.example.emoji.base.MyRecyclerViewAdapter;
-import com.example.emoji.data.room.entity.EmojiEntity;
+import com.example.emoji.data.entity.room.entity.EmojiEntity;
 import com.example.media.utils.FileUtils;
 import com.example.media.utils.GlideUtils;
 

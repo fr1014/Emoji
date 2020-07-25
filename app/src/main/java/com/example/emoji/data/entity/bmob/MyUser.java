@@ -1,7 +1,6 @@
-package com.example.emoji.data.bmob;
+package com.example.emoji.data.entity.bmob;
 
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * 创建时间:2020/6/7
